@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express()
-const movies = require('./routes/movies')
+const forums = require('./routes/forums')
+const posts = require('./routes/posts')
+const threads = require('./routes/threads')
+const users = require('./routes/users')
+
 const connectDB = require('./db/connect')
 require('dotenv').config()
 const port = 5000
@@ -11,7 +15,10 @@ app.get('/', (req, res) => {
 	res.send('Hello World!')
 })
 
-app.use('/api/v1/movies', movies)
+app.use('/api/v1/forums', forums)
+app.use('/api/v1/posts', posts)
+app.use('/api/v1/threads', threads)
+app.use('/api/v1/users', users)
 
 const start = async () => {
 	try {
