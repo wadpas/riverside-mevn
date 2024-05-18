@@ -27,15 +27,15 @@ const ThreadSchema = new mongoose.Schema(
 		},
 		slug: {
 			type: String,
-			required: [true, 'Slug is required'],
+			required: [true, 'field is required'],
 			trim: true,
-			maxlength: [20, 'Slug can not be more than 20 characters'],
+			maxlength: [20, 'field can not be more than 20 characters'],
 		},
 		title: {
 			type: String,
-			required: [true, 'Title is required'],
+			required: [true, 'field is required'],
 			trim: true,
-			maxlength: [20, 'Title can not be more than 20 characters'],
+			maxlength: [20, 'field can not be more than 20 characters'],
 		},
 		userId: {
 			type: mongoose.Types.ObjectId,

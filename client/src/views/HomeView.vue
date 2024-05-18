@@ -1,6 +1,5 @@
 <template>
 	<div>HomeView</div>
-	{{ threads2 }}
 	<div
 		v-for="thread in threads"
 		:key="thread.id">
@@ -8,7 +7,7 @@
 		<div
 			v-for="postId in thread.posts"
 			:key="postId">
-			<p>{{ postById(postId).text }}</p>
+			<p>{{ postById(postId)?.text }}</p>
 		</div>
 	</div>
 </template>
@@ -18,21 +17,22 @@
 	import sourceData from '../../../../school/src/data.json'
 	import { onMounted, ref } from 'vue'
 
-	let threads2 = ref([])
-	const threads = ref(sourceData.threads)
-	const posts = ref(sourceData.posts)
-	const users = ref(sourceData.users)
+	const threads = ref([])
+	const posts = ref([])
 
 	function postById(postId) {
-		return posts.value.find((post) => post.id === postId)
+		return posts.value.find((post) => post._id === postId)
 	}
 
-	onMounted(() => {
-		axios.get('http://localhost:5000/api/v1/forums/').then((res) => {
-			threads2.value = res.data
-			console.log(res.data)
-		})
-		console.log(`the component is now mounted.`)
+	onMounted(async () => {
+		try {
+			const resThreads = await axios.get('/threads')
+			threads.value = resThreads.data
+			const resPosts = await axios.get('/posts')
+			posts.value = resPosts.data
+		} catch (error) {
+			console.log(error)
+		}
 	})
 </script>
 
