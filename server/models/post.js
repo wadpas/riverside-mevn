@@ -5,15 +5,12 @@ const PostSchema = new mongoose.Schema(
 		edited: {
 			at: {
 				type: Date,
-				default: Date.now,
 			},
 			by: {
 				type: mongoose.Types.ObjectId,
-				required: true,
 			},
 			moderated: {
 				type: Boolean,
-				default: false,
 			},
 		},
 		publishedAt: {
@@ -22,17 +19,15 @@ const PostSchema = new mongoose.Schema(
 		},
 		text: {
 			type: String,
-			required: true,
+			required: [true, 'Text is required'],
+			trim: true,
+			maxlength: [200, 'Text can not be more than 200 characters'],
 		},
 		threadId: {
 			type: mongoose.Types.ObjectId,
 			required: true,
 		},
 		userId: {
-			type: mongoose.Types.ObjectId,
-			required: true,
-		},
-		_id: {
 			type: mongoose.Types.ObjectId,
 			required: true,
 		},

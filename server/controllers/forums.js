@@ -1,11 +1,12 @@
 const Forum = require('../models/forum')
 
 const getForums = (req, res) => {
-	res.send('All forums')
+	res.status(201).json({ test: 'test' })
 }
 
 const createForum = async (req, res) => {
-	res.status(201).json(req.body)
+	const forum = await Forum.create(req.body)
+	res.status(201).json({ forum })
 }
 
 const getForum = (req, res) => {

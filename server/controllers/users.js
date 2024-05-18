@@ -5,7 +5,8 @@ const getUsers = (req, res) => {
 }
 
 const createUser = async (req, res) => {
-	res.status(201).json(req.body)
+	const user = await User.create(req.body)
+	res.status(201).json({ user })
 }
 
 const getUser = (req, res) => {

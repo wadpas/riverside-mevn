@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 
 const ThreadSchema = new mongoose.Schema(
 	{
-		contributors: [],
+		contributors: {
+			type: [mongoose.Types.ObjectId],
+		},
 		firstPostId: {
 			type: mongoose.Types.ObjectId,
-			required: true,
 		},
 		forumId: {
 			type: mongoose.Types.ObjectId,
@@ -13,30 +14,30 @@ const ThreadSchema = new mongoose.Schema(
 		},
 		lastPostAt: {
 			type: Date,
-			default: Date.now,
 		},
 		lastPostId: {
 			type: mongoose.Types.ObjectId,
-			required: true,
 		},
-		posts: [],
+		posts: {
+			type: [mongoose.Types.ObjectId],
+		},
 		publishedAt: {
 			type: Date,
 			default: Date.now,
 		},
 		slug: {
 			type: String,
-			required: true,
+			required: [true, 'Slug is required'],
+			trim: true,
+			maxlength: [20, 'Slug can not be more than 20 characters'],
 		},
 		title: {
 			type: String,
-			required: true,
+			required: [true, 'Title is required'],
+			trim: true,
+			maxlength: [20, 'Title can not be more than 20 characters'],
 		},
 		userId: {
-			type: mongoose.Types.ObjectId,
-			required: true,
-		},
-		_id: {
 			type: mongoose.Types.ObjectId,
 			required: true,
 		},

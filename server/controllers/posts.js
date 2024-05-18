@@ -5,7 +5,8 @@ const getPosts = (req, res) => {
 }
 
 const createPost = async (req, res) => {
-	res.status(201).json(req.body)
+	const post = await Post.create(req.body)
+	res.status(201).json({ post })
 }
 
 const getPost = (req, res) => {

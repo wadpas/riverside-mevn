@@ -5,7 +5,8 @@ const getThreads = (req, res) => {
 }
 
 const createThread = async (req, res) => {
-	res.status(201).json(req.body)
+	const thread = await Thread.create(req.body)
+	res.status(201).json({ thread })
 }
 
 const getThread = (req, res) => {

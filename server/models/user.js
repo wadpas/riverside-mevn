@@ -8,10 +8,14 @@ const UserSchema = new mongoose.Schema(
 		},
 		bio: {
 			type: String,
+			trim: true,
+			maxlength: [100, 'Bio can not be more than 100 characters'],
 		},
 		email: {
 			type: String,
+			trim: true,
 			required: true,
+			maxlength: [20, 'Email can not be more than 20 characters'],
 		},
 		lastVisitAt: {
 			type: Date,
@@ -19,7 +23,9 @@ const UserSchema = new mongoose.Schema(
 		},
 		name: {
 			type: String,
-			required: true,
+			required: [true, 'Name is required'],
+			trim: true,
+			maxlength: [20, 'Name can not be more than 20 characters'],
 		},
 		isModerator: {
 			type: Boolean,
@@ -30,15 +36,15 @@ const UserSchema = new mongoose.Schema(
 		},
 		username: {
 			type: String,
-			required: true,
+			required: [true, 'Username is required'],
+			trim: true,
+			maxlength: [20, 'Username can not be more than 20 characters'],
 		},
 		usernameLower: {
 			type: String,
-			required: true,
-		},
-		_id: {
-			type: mongoose.Types.ObjectId,
-			required: true,
+			required: [true, 'UsernameLower is required'],
+			trim: true,
+			maxlength: [20, 'UsernameLower can not be more than 20 characters'],
 		},
 		postsCount: {
 			type: Number,

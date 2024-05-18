@@ -4,24 +4,27 @@ const ForumSchema = new mongoose.Schema(
 	{
 		description: {
 			type: String,
-			required: true,
+			required: [true, 'Description is required'],
+			trim: true,
+			maxlength: [100, 'Description can not be more than 100 characters'],
 		},
 		lastPostId: {
 			type: mongoose.Types.ObjectId,
-			required: true,
 		},
 		name: {
 			type: String,
-			required: true,
+			required: [true, 'Name is required'],
+			trim: true,
+			maxlength: [20, 'Name can not be more than 20 characters'],
 		},
 		slug: {
 			type: String,
-			required: true,
+			required: [true, 'Slug is required'],
+			trim: true,
+			maxlength: [20, 'Slug can not be more than 20 characters'],
 		},
-		threads: [],
-		_id: {
-			type: mongoose.Types.ObjectId,
-			required: true,
+		threads: {
+			type: [mongoose.Types.ObjectId],
 		},
 	},
 	{
