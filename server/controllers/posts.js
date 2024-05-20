@@ -10,8 +10,12 @@ const getPosts = async (req, res) => {
 }
 
 const createPost = async (req, res) => {
-	const post = await Post.create(req.body)
-	res.status(201).json(post)
+	try {
+		const thread = await Post.create(req.body)
+		res.status(201).json(thread)
+	} catch (error) {
+		res.status(500).json(error.message)
+	}
 }
 
 const getPost = (req, res) => {

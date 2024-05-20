@@ -10,20 +10,51 @@ const getUsers = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
-	const user = await User.create(req.body)
-	res.status(201).json({ user })
+	try {
+		const user = await User.create(req.body)
+		res.status(201).json(user)
+	} catch (error) {
+		res.status(500).json(error.message)
+	}
 }
 
-const getUser = (req, res) => {
-	res.json({ id: req.params.id })
+const getUser = async (req, res) => {
+	try {
+		const { id } = req.params
+		const user = await User.findById({ _id: id })
+		if (!user) {
+			return res.status(404).json(`User ${id} not found`)
+		}
+		res.status(200).json(user)
+	} catch (error) {
+		res.status(500).json(error)
+	}
 }
 
-const updateUser = (req, res) => {
-	res.send('Update user')
+const updateUser = async (req, res) => {
+	try {
+		const { id: UserId } = req.params
+		const user = await User.findOneAndUpdate({ _id: UserId }, req.body, { new: true, runValidation: true })
+		if (!user) {
+			return res.status(404).json(`User ${UserId} not found`)
+		}
+		res.status(200).json({ user })
+	} catch (error) {
+		res.status(500).json({ error })
+	}
 }
 
-const deleteUser = (req, res) => {
-	res.send('Delete user')
+const deleteUser = async (req, res) => {
+	try {
+		const { id } = req.params
+		const user = await User.findOneAndDelete({ _id: id })
+		if (!user) {
+			return res.status(404).json(`User ${id} not found`)
+		}
+		res.status(200).json(user)
+	} catch (error) {
+		res.status(500).json(error)
+	}
 }
 
 module.exports = {

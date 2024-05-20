@@ -18,8 +18,17 @@ const createThread = async (req, res) => {
 	}
 }
 
-const getThread = (req, res) => {
-	res.json({ id: req.params.id })
+const getThread = async (req, res) => {
+	try {
+		const { id } = req.params
+		const thread = await Thread.findById({ _id: id })
+		if (!thread) {
+			return res.status(404).json(`Thread ${id} not found`)
+		}
+		res.status(200).json(thread)
+	} catch (error) {
+		res.status(500).json(error)
+	}
 }
 
 const updateThread = (req, res) => {

@@ -1,12 +1,21 @@
 const Forum = require('../models/forum')
 
-const getForums = (req, res) => {
-	res.status(201).json({ test: 'test' })
+const getForums = async (req, res) => {
+	try {
+		const posts = await Forum.find({})
+		res.status(200).json(posts)
+	} catch (error) {
+		res.status(500).json(error)
+	}
 }
 
 const createForum = async (req, res) => {
-	const forum = await Forum.create(req.body)
-	res.status(201).json({ forum })
+	try {
+		const thread = await Forum.create(req.body)
+		res.status(201).json(thread)
+	} catch (error) {
+		res.status(500).json(error.message)
+	}
 }
 
 const getForum = (req, res) => {
