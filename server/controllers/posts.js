@@ -1,22 +1,15 @@
 const Post = require('../models/post')
+const asyncWrapper = require('../middleware/async')
 
-const getPosts = async (req, res) => {
-	try {
-		const posts = await Post.find({})
-		res.status(200).json(posts)
-	} catch (error) {
-		res.status(500).json(error)
-	}
-}
+const getPosts = asyncWrapper(async (req, res) => {
+	const posts = await Post.find({})
+	res.status(200).json(posts)
+})
 
-const createPost = async (req, res) => {
-	try {
-		const thread = await Post.create(req.body)
-		res.status(201).json(thread)
-	} catch (error) {
-		res.status(500).json(error.message)
-	}
-}
+const createPost = asyncWrapper(async (req, res) => {
+	const thread = await Post.create(req.body)
+	res.status(201).json(thread)
+})
 
 const getPost = (req, res) => {
 	res.json({ id: req.params.id })

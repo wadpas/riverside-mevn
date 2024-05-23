@@ -1,43 +1,21 @@
 <template>
 	<div class="col-large push-top">
 		<h1>{{ thread.title }}</h1>
-
 		<div class="post-list">
-			<div
-				v-for="postId in thread.posts"
-				:key="postId"
-				class="post">
-				<div class="user-info">
-					<a
-						href="#"
-						class="user-name">
-						{{ userById(postById(postId)?.userId)?.name }}
-					</a>
-					<a href="#">
-						<img
-							class="avatar-large"
-							:src="userById(postById(postId)?.userId)?.avatar"
-							alt="" />
-					</a>
-
-					<p class="desktop-only text-small">107 posts</p>
-				</div>
-
-				<div class="post-content">
-					<div>
-						<p>
-							{{ postById(postId)?.text }}
-						</p>
-					</div>
-				</div>
-				<div class="post-date text-faded">{{ postById(postId)?.publishedAt }}</div>
-			</div>
+			<PostItem
+				v-for="post in postsByThreadId(thread._id)"
+				:post="post"
+				:user="userById(post.userId)"
+				:key="post._id"
+				class="post" />
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import axios from 'axios'
 	import { onMounted, ref } from 'vue'
+	import PostItem from '../components/PostItem.vue'
 
 	const props = defineProps({
 		id: String,
@@ -47,8 +25,8 @@
 	const posts = ref([])
 	const users = ref([])
 
-	function postById(postId) {
-		return posts.value.find((post) => post._id === postId)
+	function postsByThreadId(thread_id) {
+		return posts.value.filter((post) => post.threadId === thread_id)
 	}
 	function userById(userId) {
 		return users.value.find((user) => user._id === userId)
