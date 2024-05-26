@@ -23,11 +23,16 @@
 				</p>
 			</div>
 		</div>
-		<div class="post-date text-faded">{{ post?.publishedAt }}</div>
+
+		<div class="post-date text-faded">
+			<AppDate :timestamp="post?.publishedAt" />
+		</div>
 	</div>
 </template>
 
 <script setup>
+	import AppDate from './AppDate.vue'
+
 	const props = defineProps({
 		post: Object,
 		user: Object,

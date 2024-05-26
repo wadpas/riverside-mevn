@@ -20,9 +20,14 @@ const getThread = asyncWrapper(async (req, res) => {
 	res.status(200).json(thread)
 })
 
-const updateThread = (req, res) => {
-	res.send('Update thread')
-}
+const updateThread = asyncWrapper(async (req, res) => {
+	const { id } = req.params
+	const thread = await Thread.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
+	if (!thread) {
+		return res.status(404).json(`Thread ${threadId} not found`)
+	}
+	res.status(200).json({ thread })
+})
 
 const deleteThread = (req, res) => {
 	res.send('Delete thread')
