@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 			required: true,
-			maxlength: [20, 'field can not be more than 20 characters'],
+			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		lastVisitAt: {
 			type: Date,
@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			required: [true, 'field is required'],
 			trim: true,
-			maxlength: [20, 'field can not be more than 20 characters'],
+			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		isModerator: {
 			type: Boolean,
@@ -38,13 +38,13 @@ const UserSchema = new mongoose.Schema(
 			type: String,
 			required: [true, 'field is required'],
 			trim: true,
-			maxlength: [20, 'field can not be more than 20 characters'],
+			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		usernameLower: {
 			type: String,
 			required: [true, 'field is required'],
 			trim: true,
-			maxlength: [20, 'field can not be more than 20 characters'],
+			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		postsCount: {
 			type: Number,

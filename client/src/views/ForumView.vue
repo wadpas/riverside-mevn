@@ -1,48 +1,35 @@
 <template>
-	<div class="col-full">
-		<div class="thread-list">
-			<h2 class="list-title">Threads</h2>
-			<div
-				v-for="thread in threads"
-				:key="thread.id"
-				class="thread">
-				<div>
-					<p>
-						<router-link :to="{ name: 'ThreadView', params: { id: thread._id } }">{{ thread.title }}</router-link>
-					</p>
-					<p class="text-faded text-xsmall">
-						By
-						<a href="#">{{ userById(thread.userId)?.name }}</a>
-						, {{ thread.publishedAt }}.
-					</p>
-				</div>
-				<div class="activity">
-					<p class="replies-count">{{ thread.posts.length }} replies</p>
-					<img
-						class="avatar-medium"
-						:src="userById(thread.userId)?.avatar"
-						alt="" />
-					<div>
-						<p class="text-xsmall">
-							<a href="#">{{ userById(thread.userId)?.name }}</a>
-						</p>
-						<p class="text-xsmall text-faded">{{ thread.publishedAt }}</p>
-					</div>
-				</div>
-			</div>
+	<div class="forum-header">
+		<div class="forum-details">
+			<h1>{{ forum.name }}</h1>
+			<p class="text-lead">{{ forum.description }}</p>
 		</div>
+		<a
+			href="new-thread.html"
+			class="btn-green btn-small">
+			Start a thread
+		</a>
+	</div>
+	<div class="thread-list push-top">
+		<h2 class="list-title">Threads</h2>
+		<ThreadItem
+			v-for="thread in forumThreads"
+			:thread="thread"
+			:user="userById(thread.userId)"
+			:key="thread._id" />
 	</div>
 </template>
 
 <script setup>
 	import axios from 'axios'
 	import { onMounted, ref } from 'vue'
+	import ThreadItem from '../components/ThreadItem.vue'
 
 	const props = defineProps({
-		threads: Array,
+		id: String,
 	})
-
-	const posts = ref([])
+	const forum = ref({})
+	const forumThreads = ref([])
 	const users = ref([])
 
 	function userById(userId) {
@@ -51,10 +38,14 @@
 
 	onMounted(async () => {
 		try {
-			const resPosts = await axios.get('/posts')
-			posts.value = resPosts.data
 			const resUsers = await axios.get('/users')
 			users.value = resUsers.data
+
+			const resForum = await axios.get('/forums/' + props.id)
+			forum.value = resForum.data
+
+			const resThreads = await axios.get('/threads', { params: { forumId: props.id } })
+			forumThreads.value = resThreads.data
 		} catch (error) {
 			console.log(error)
 		}

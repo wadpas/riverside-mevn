@@ -1,7 +1,9 @@
 <template>
 	<div class="container">
-		<router-view />
+		<div class="col-full push-top">
+			<router-view />
+		</div>
 	</div>
 </template>
 
-<script setup></script>
+<script></script>

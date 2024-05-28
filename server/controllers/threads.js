@@ -2,7 +2,8 @@ const Thread = require('../models/thread')
 const asyncWrapper = require('../middleware/async')
 
 const getThreads = asyncWrapper(async (req, res) => {
-	const threads = await Thread.find({})
+	const { forumId } = req.query
+	const threads = await Thread.find({ forumId: forumId })
 	res.status(200).json(threads)
 })
 

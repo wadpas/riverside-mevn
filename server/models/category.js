@@ -2,15 +2,6 @@ const mongoose = require('mongoose')
 
 const ForumSchema = new mongoose.Schema(
 	{
-		description: {
-			type: String,
-			required: [true, 'field is required'],
-			trim: true,
-			maxlength: [100, 'field can not be more than 100 characters'],
-		},
-		lastPostId: {
-			type: mongoose.Types.ObjectId,
-		},
 		name: {
 			type: String,
 			required: [true, 'field is required'],
@@ -23,7 +14,7 @@ const ForumSchema = new mongoose.Schema(
 			trim: true,
 			maxlength: [30, 'field can not be more than 20 characters'],
 		},
-		threads: {
+		forums: {
 			type: [mongoose.Types.ObjectId],
 		},
 	},
@@ -32,4 +23,4 @@ const ForumSchema = new mongoose.Schema(
 	}
 )
 
-module.exports = mongoose.model('Forum', ForumSchema)
+module.exports = mongoose.model('Category', ForumSchema)

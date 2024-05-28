@@ -4,12 +4,12 @@
 			<a
 				href="#"
 				class="user-name">
-				{{ user?.name }}
+				{{ user.name }}
 			</a>
 			<a href="#">
 				<img
 					class="avatar-large"
-					:src="user?.avatar"
+					:src="user.avatar"
 					alt="" />
 			</a>
 
@@ -19,13 +19,13 @@
 		<div class="post-content">
 			<div>
 				<p>
-					{{ post?.text }}
+					{{ post.text }}
 				</p>
 			</div>
 		</div>
 
 		<div class="post-date text-faded">
-			<AppDate :timestamp="post?.publishedAt" />
+			<AppDate :timestamp="post.publishedAt" />
 		</div>
 	</div>
 </template>

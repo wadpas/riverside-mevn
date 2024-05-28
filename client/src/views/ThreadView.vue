@@ -1,16 +1,13 @@
 <template>
-	<div class="col-large push-top">
-		<h1>{{ thread.title }}</h1>
+	<h1>{{ thread.title }}</h1>
 
-		<PostItem
-			v-for="post in threadPosts"
-			:post="post"
-			:user="userById(post.userId)"
-			:key="post._id"
-			class="post" />
+	<PostItem
+		v-for="post in threadPosts"
+		:post="post"
+		:user="userById(post.userId)"
+		:key="post._id" />
 
-		<PostForm @save="addPost" />
-	</div>
+	<PostForm @save="addPost" />
 </template>
 
 <script setup>
@@ -50,14 +47,14 @@
 
 	onMounted(async () => {
 		try {
+			const resUsers = await axios.get('/users')
+			users.value = resUsers.data
+
 			const resThread = await axios.get('/threads/' + props.id)
 			thread.value = resThread.data
 
-			const resPosts = await axios.get('/posts', { params: { threadId: thread.value._id } })
+			const resPosts = await axios.get('/posts', { params: { threadId: props.id } })
 			threadPosts.value = resPosts.data
-
-			const resUsers = await axios.get('/users')
-			users.value = resUsers.data
 		} catch (error) {
 			console.log(error)
 		}
