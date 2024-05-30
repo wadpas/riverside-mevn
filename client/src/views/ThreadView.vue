@@ -2,7 +2,7 @@
 	<h1>{{ thread.title }}</h1>
 
 	<PostItem
-		v-for="post in threadPosts"
+		v-for="post in posts"
 		:post="post"
 		:user="userById(post.userId)"
 		:key="post._id" />
@@ -13,6 +13,10 @@
 <script setup>
 	import axios from 'axios'
 	import { onMounted, ref } from 'vue'
+	import { storeToRefs } from 'pinia'
+	import { useThreadsStore } from '../stores/ThreadsStore'
+	import { usePostsStore } from '../stores/PostsStore'
+	import { useUsersStore } from '../stores/UsersStore'
 	import PostItem from '../components/PostItem.vue'
 	import PostForm from '../components/PostForm.vue'
 
@@ -20,9 +24,9 @@
 		id: String,
 	})
 
-	const thread = ref({})
-	const threadPosts = ref([])
-	const users = ref([])
+	const { thread } = storeToRefs(useThreadsStore())
+	const { posts } = storeToRefs(usePostsStore())
+	const { users } = storeToRefs(useUsersStore())
 
 	function userById(userId) {
 		return users.value.find((user) => user._id === userId)
@@ -36,10 +40,8 @@
 		try {
 			const resPost = await axios.post('/posts', post)
 			const dbPost = resPost.data
-			threadPosts.value.push(dbPost)
-
-			const resThread = await axios.patch('/threads/' + props.id, { posts: threadPosts.value })
-			thread.value = resThread.data.thread
+			usePostsStore().createPost(dbPost)
+			const resThread = await axios.patch('/threads/' + props.id, { posts: posts.value })
 		} catch (error) {
 			console.log(error)
 		}
@@ -47,6 +49,7 @@
 
 	onMounted(async () => {
 		try {
+			posts.value = []
 			const resUsers = await axios.get('/users')
 			users.value = resUsers.data
 
@@ -54,7 +57,7 @@
 			thread.value = resThread.data
 
 			const resPosts = await axios.get('/posts', { params: { threadId: props.id } })
-			threadPosts.value = resPosts.data
+			posts.value = resPosts.data
 		} catch (error) {
 			console.log(error)
 		}

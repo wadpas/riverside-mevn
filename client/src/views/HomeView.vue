@@ -16,11 +16,14 @@
 
 <script setup>
 	import axios from 'axios'
-	import { onMounted, ref } from 'vue'
 	import ForumItem from '../components/ForumItem.vue'
+	import { onMounted } from 'vue'
+	import { storeToRefs } from 'pinia'
+	import { useCategoriesStore } from '../stores/CategoriesStore'
+	import { useForumsStore } from '../stores/ForumsStore'
 
-	const categories = ref([])
-	const forums = ref([])
+	const { categories } = storeToRefs(useCategoriesStore())
+	const { forums } = storeToRefs(useForumsStore())
 
 	function categoryForum(forumId) {
 		return forums.value.find((forum) => forum._id === forumId)
