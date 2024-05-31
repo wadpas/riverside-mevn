@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const asyncWrapper = require('../middleware/async')
+const { customError } = require('../errors/custom-error')
 
 const getUsers = asyncWrapper(async (req, res) => {
 	const users = await User.find({})
@@ -11,29 +12,29 @@ const createUser = asyncWrapper(async (req, res) => {
 	res.status(201).json(user)
 })
 
-const getUser = asyncWrapper(async (req, res) => {
+const getUser = asyncWrapper(async (req, res, next) => {
 	const { id } = req.params
 	const user = await User.findById({ _id: id })
 	if (!user) {
-		return res.status(404).json(`User ${id} not found`)
+		return next(customError(`No user with id : ${id}`, 404))
 	}
 	res.status(200).json(user)
 })
 
-const updateUser = asyncWrapper(async (req, res) => {
-	const { id: UserId } = req.params
-	const user = await User.findOneAndUpdate({ _id: UserId }, req.body, { new: true, runValidation: true })
+const updateUser = asyncWrapper(async (req, res, next) => {
+	const { id } = req.params
+	const user = await User.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
 	if (!user) {
-		return res.status(404).json(`User ${UserId} not found`)
+		return next(customError(`No user with id : ${id}`, 404))
 	}
 	res.status(200).json({ user })
 })
 
-const deleteUser = asyncWrapper(async (req, res) => {
+const deleteUser = asyncWrapper(async (req, res, next) => {
 	const { id } = req.params
 	const user = await User.findOneAndDelete({ _id: id })
 	if (!user) {
-		return res.status(404).json(`User ${id} not found`)
+		return next(customError(`No user with id : ${id}`, 404))
 	}
 	res.status(200).json(user)
 })

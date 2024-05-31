@@ -7,6 +7,7 @@ const users = require('./routes/users')
 const categories = require('./routes/categories')
 const connectDB = require('./db/connect')
 const notFound = require('./middleware/not-found')
+const errorHandler = require('./middleware/error-handler')
 require('dotenv').config()
 
 const app = express()
@@ -21,6 +22,7 @@ app.use('/api/v1/threads', threads)
 app.use('/api/v1/users', users)
 app.use('/api/v1/categories', categories)
 app.use(notFound)
+app.use(errorHandler)
 
 const start = async () => {
 	try {

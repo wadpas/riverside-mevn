@@ -776,6 +776,8 @@ span.online::before {
 
 .logo {
 	float: left;
+	width: 230px;
+	padding-top: 5px;
 }
 
 .svg-logo {

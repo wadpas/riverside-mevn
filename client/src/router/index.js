@@ -39,6 +39,12 @@ const routes = [
 		},
 	},
 	{
+		path: '/forums/:id',
+		name: 'ForumView',
+		component: ForumView,
+		props: true,
+	},
+	{
 		path: '/:pathMatch(.*)*',
 		name: 'NotFound',
 		component: NotFound,

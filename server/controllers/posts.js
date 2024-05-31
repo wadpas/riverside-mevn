@@ -1,42 +1,43 @@
 const Post = require('../models/post')
 const asyncWrapper = require('../middleware/async')
+const { customError } = require('../errors/custom-error')
 
 const getPosts = asyncWrapper(async (req, res) => {
 	const { threadId } = req.query
 	const posts = await Post.find({ threadId: threadId })
-	res.status(200).json(posts)
+	res.status(200).json({ posts })
 })
 
 const createPost = asyncWrapper(async (req, res) => {
-	const thread = await Post.create(req.body)
-	res.status(201).json(thread)
+	const post = await Post.create(req.body)
+	res.status(201).json({ post })
 })
 
-const getPost = asyncWrapper(async (req, res) => {
+const getPost = asyncWrapper(async (req, res, next) => {
 	const { id } = req.params
 	const post = await Post.findById({ _id: id })
 	if (!post) {
-		return res.status(404).json(`Post ${id} not found`)
+		return next(customError(`No post with id : ${id}`, 404))
 	}
-	res.status(200).json(post)
+	res.status(200).json({ post })
 })
 
-const updatePost = asyncWrapper(async (req, res) => {
+const updatePost = asyncWrapper(async (req, res, next) => {
 	const { id } = req.params
-	const thread = await Post.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
-	if (!thread) {
-		return res.status(404).json(`Thread ${threadId} not found`)
+	const post = await Post.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
+	if (!post) {
+		return next(customError(`No post with id : ${id}`, 404))
 	}
-	res.status(200).json({ thread })
+	res.status(200).json({ post })
 })
 
-const deletePost = asyncWrapper(async (req, res) => {
+const deletePost = asyncWrapper(async (req, res, next) => {
 	const { id } = req.params
-	const user = await Post.findOneAndDelete({ _id: id })
-	if (!user) {
-		return res.status(404).json(`User ${id} not found`)
+	const post = await Post.findOneAndDelete({ _id: id })
+	if (!post) {
+		return next(customError(`No post with id : ${id}`, 404))
 	}
-	res.status(200).json(user)
+	res.status(200).json({ post })
 })
 
 module.exports = {

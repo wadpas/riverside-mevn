@@ -43,7 +43,7 @@
 			usePostsStore().createPost(dbPost)
 			const resThread = await axios.patch('/threads/' + props.id, { posts: posts.value })
 		} catch (error) {
-			console.log(error)
+			console.log(error.response.data.msg)
 		}
 	}
 

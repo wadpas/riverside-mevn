@@ -22,7 +22,7 @@
 
 <script setup>
 	import axios from 'axios'
-	import { onMounted, ref } from 'vue'
+	import { onMounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
 	import { useForumsStore } from '../stores/ForumsStore'
