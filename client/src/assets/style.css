@@ -776,7 +776,7 @@ span.online::before {
 
 .logo {
 	float: left;
-	width: 230px;
+	width: 200px;
 	padding-top: 5px;
 }
 
@@ -1249,16 +1249,6 @@ ul .navbar-mobile-item:last-child {
 
 .btn-hamburger-active .bottom {
 	top: 16px;
-}
-
-header > a.logo {
-	width: 50px;
-}
-
-@media (min-width: 240px) and (max-width: 720px) {
-	header > a.logo {
-		width: 35px;
-	}
 }
 
 .title {

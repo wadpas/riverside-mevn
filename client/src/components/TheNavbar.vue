@@ -19,19 +19,21 @@
 		<nav class="navbar">
 			<ul>
 				<li class="navbar-user">
-					<a href="#">
+					<router-link
+						:to="{ name: 'ProfileView' }"
+						href="#">
 						<img
 							class="avatar-small"
-							:src="authUser.avatar"
-							:alt="`${authUser.name} profile picture`" />
+							:src="user.avatar"
+							:alt="`${user.name} profile picture`" />
 						<span>
-							{{ authUser.name }}
+							{{ user.name }}
 							<img
 								class="icon-profile"
 								src="../assets/arrow-profile.svg"
 								alt="" />
 						</span>
-					</a>
+					</router-link>
 
 					<!-- dropdown menu -->
 					<!-- add class "active-drop" to show the dropdown -->
@@ -70,20 +72,8 @@
 </template>
 
 <script setup>
-	import axios from 'axios'
-	import { onMounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
 
-	const { authUser } = storeToRefs(useUsersStore())
-
-	onMounted(async () => {
-		try {
-			authUser.value = []
-			const resUser = await axios.get('/users/' + '324d58435944716d4e416832')
-			authUser.value = resUser.data
-		} catch (error) {
-			console.log(error)
-		}
-	})
+	const { authUser: user } = storeToRefs(useUsersStore())
 </script>

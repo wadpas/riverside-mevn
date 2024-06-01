@@ -3,8 +3,7 @@ const asyncWrapper = require('../middleware/async')
 const { customError } = require('../errors/custom-error')
 
 const getPosts = asyncWrapper(async (req, res) => {
-	const { threadId } = req.query
-	const posts = await Post.find({ threadId: threadId })
+	const posts = await Post.find(req.query)
 	res.status(200).json({ posts })
 })
 

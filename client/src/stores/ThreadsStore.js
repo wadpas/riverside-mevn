@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { defineStore } from 'pinia'
 
 export const useThreadsStore = defineStore('ThreadsStore', {
@@ -7,6 +8,11 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			thread: {},
 		}
 	},
-	getters: {},
-	actions: {},
+	actions: {
+		async fetchThreads(params) {
+			await axios.get('/threads', { params: params }).then((res) => {
+				this.threads = res.data.threads
+			})
+		},
+	},
 })

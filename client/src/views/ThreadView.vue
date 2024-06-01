@@ -56,8 +56,7 @@
 			const resThread = await axios.get('/threads/' + props.id)
 			thread.value = resThread.data
 
-			const resPosts = await axios.get('/posts', { params: { threadId: props.id } })
-			posts.value = resPosts.data
+			usePostsStore().fetchPosts({ threadId: props.id })
 		} catch (error) {
 			console.log(error)
 		}
