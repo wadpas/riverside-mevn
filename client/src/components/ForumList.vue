@@ -1,5 +1,7 @@
 <template>
-	<div class="forum-listing">
+	<div
+		v-for="forum in forums"
+		class="forum-listing">
 		<div class="forum-details">
 			<router-link
 				:to="{ name: 'ForumView', params: { id: forum._id } }"
@@ -21,7 +23,5 @@
 </template>
 
 <script setup>
-	const props = defineProps({
-		forum: Object,
-	})
+	const props = defineProps({ forums: Array })
 </script>

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { defineStore } from 'pinia'
 
 export const useUsersStore = defineStore('UsersStore', {
@@ -18,6 +19,18 @@ export const useUsersStore = defineStore('UsersStore', {
 			},
 		}
 	},
-	getters: {},
-	actions: {},
+	getters: {
+		userById(state) {
+			return (id) => state.users.find((user) => user._id === id)
+		},
+	},
+
+	actions: {
+		async fetchUsers() {
+			if (this.users.length) return
+			await axios.get('/users').then((res) => {
+				this.users = res.data.users
+			})
+		},
+	},
 })

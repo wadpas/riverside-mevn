@@ -8,34 +8,26 @@
 			<a>{{ category.name }}</a>
 		</h2>
 
-		<ForumItem
-			v-for="forumId in category.forums"
-			:forum="categoryForum(forumId)" />
+		<ForumList :forums="forumsByIds(category.forums)" />
 	</div>
 </template>
 
 <script setup>
-	import axios from 'axios'
-	import ForumItem from '../components/ForumItem.vue'
+	import ForumList from '../components/ForumList.vue'
 	import { onMounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useCategoriesStore } from '../stores/CategoriesStore'
 	import { useForumsStore } from '../stores/ForumsStore'
 
-	const { categories } = storeToRefs(useCategoriesStore())
-	const { forums } = storeToRefs(useForumsStore())
-
-	function categoryForum(forumId) {
-		return forums.value.find((forum) => forum._id === forumId)
-	}
+	const categoriesStore = useCategoriesStore()
+	const forumsStore = useForumsStore()
+	const { categories } = storeToRefs(categoriesStore)
+	const { forumsByIds } = storeToRefs(forumsStore)
 
 	onMounted(async () => {
 		try {
-			const resForums = await axios.get('/forums')
-			forums.value = resForums.data
-
-			const resCategories = await axios.get('/categories')
-			categories.value = resCategories.data
+			await forumsStore.fetchForums()
+			await categoriesStore.fetchCategories()
 		} catch (error) {
 			console.log(error)
 		}

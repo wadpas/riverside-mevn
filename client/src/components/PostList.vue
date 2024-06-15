@@ -1,15 +1,17 @@
 <template>
-	<div class="post">
+	<div
+		v-for="post in posts"
+		class="post">
 		<div class="user-info">
 			<a
 				href="#"
 				class="user-name">
-				{{ user.name }}
+				{{ userById(post.userId)?.name }}
 			</a>
 			<a href="#">
 				<img
 					class="avatar-large"
-					:src="user.avatar"
+					:src="userById(post.userId)?.avatar"
 					alt="" />
 			</a>
 
@@ -31,11 +33,21 @@
 </template>
 
 <script setup>
+	import { onMounted } from 'vue'
+	import { storeToRefs } from 'pinia'
+	import { useUsersStore } from '../stores/UsersStore'
 	import AppDate from './AppDate.vue'
 
-	const props = defineProps({
-		post: Object,
-		user: Object,
+	const props = defineProps({ posts: Array })
+	const usersStore = useUsersStore()
+	const { userById } = storeToRefs(usersStore)
+
+	onMounted(async () => {
+		try {
+			await usersStore.fetchUsers()
+		} catch (error) {
+			console.log(error)
+		}
 	})
 </script>
 

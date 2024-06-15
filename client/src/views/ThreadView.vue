@@ -1,11 +1,7 @@
 <template>
-	<h1>{{ thread.title }}</h1>
+	<h1>{{ threadById(props.id)?.title }}</h1>
 
-	<PostItem
-		v-for="post in posts"
-		:post="post"
-		:user="userById(post.userId)"
-		:key="post._id" />
+	<PostList :posts="posts" />
 
 	<PostForm @save="addPost" />
 </template>
@@ -16,21 +12,15 @@
 	import { storeToRefs } from 'pinia'
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
-	import { useUsersStore } from '../stores/UsersStore'
-	import PostItem from '../components/PostItem.vue'
+	import PostList from '../components/PostList.vue'
 	import PostForm from '../components/PostForm.vue'
 
-	const props = defineProps({
-		id: String,
-	})
+	const props = defineProps({ id: String })
 
-	const { thread } = storeToRefs(useThreadsStore())
-	const { posts } = storeToRefs(usePostsStore())
-	const { users } = storeToRefs(useUsersStore())
-
-	function userById(userId) {
-		return users.value.find((user) => user._id === userId)
-	}
+	const threadsStore = useThreadsStore()
+	const postsStore = usePostsStore()
+	const { threadById } = storeToRefs(threadsStore)
+	const { posts } = storeToRefs(postsStore)
 
 	async function addPost(eventData) {
 		const post = {
@@ -50,13 +40,8 @@
 	onMounted(async () => {
 		try {
 			posts.value = []
-			const resUsers = await axios.get('/users')
-			users.value = resUsers.data
-
-			const resThread = await axios.get('/threads/' + props.id)
-			thread.value = resThread.data
-
-			usePostsStore().fetchPosts({ threadId: props.id })
+			await threadsStore.fetchThreads({ _id: props.id })
+			await postsStore.fetchPosts({ threadId: props.id })
 		} catch (error) {
 			console.log(error)
 		}

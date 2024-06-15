@@ -4,12 +4,12 @@ const { customError } = require('../errors/custom-error')
 
 const getUsers = asyncWrapper(async (req, res) => {
 	const users = await User.find({})
-	res.status(200).json(users)
+	res.status(200).json({ users })
 })
 
 const createUser = asyncWrapper(async (req, res) => {
 	const user = await User.create(req.body)
-	res.status(201).json(user)
+	res.status(201).json({ user })
 })
 
 const getUser = asyncWrapper(async (req, res, next) => {
@@ -18,7 +18,7 @@ const getUser = asyncWrapper(async (req, res, next) => {
 	if (!user) {
 		return next(customError(`No user with id : ${id}`, 404))
 	}
-	res.status(200).json(user)
+	res.status(200).json({ user })
 })
 
 const updateUser = asyncWrapper(async (req, res, next) => {
@@ -36,7 +36,7 @@ const deleteUser = asyncWrapper(async (req, res, next) => {
 	if (!user) {
 		return next(customError(`No user with id : ${id}`, 404))
 	}
-	res.status(200).json(user)
+	res.status(200).json({ user })
 })
 
 module.exports = {

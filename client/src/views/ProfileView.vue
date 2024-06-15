@@ -69,19 +69,21 @@
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
 	import { useUsersStore } from '../stores/UsersStore'
-	import PostItem from '../components/PostItem.vue'
+	import PostItem from '../components/PostList.vue'
+	const usersStore = useUsersStore()
+	const threadsStore = useThreadsStore()
+	const postsStore = usePostsStore()
 
-	const { threads } = storeToRefs(useThreadsStore())
-	const { posts } = storeToRefs(usePostsStore())
-	const { authUser: user } = storeToRefs(useUsersStore())
+	const { threads } = storeToRefs(threadsStore)
+	const { posts } = storeToRefs(postsStore)
+	const { authUser: user } = storeToRefs(usersStore)
 
 	onMounted(() => {
 		try {
-			usePostsStore().fetchPosts({ userId: user.value._id })
-			useThreadsStore().fetchThreads({ userId: user.value._id })
+			usersStore.fetchPosts({ userId: user.value._id })
+			threadsStore.fetchThreads({ userId: user.value._id })
 		} catch (error) {
 			console.log(error.response.data.msg)
 		}
 	})
 </script>
-s
