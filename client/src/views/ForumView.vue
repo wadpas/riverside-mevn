@@ -33,9 +33,10 @@
 
 	onMounted(async () => {
 		try {
+			threads.value = []
 			await forumsStore.fetchForums()
 			await threadsStore.fetchThreads({ forumId: props.id })
-			console.log(props.id)
+			console.log('Forum page is Mounted')
 		} catch (error) {
 			console.log(error)
 		}

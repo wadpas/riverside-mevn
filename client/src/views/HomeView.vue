@@ -28,6 +28,7 @@
 		try {
 			await forumsStore.fetchForums()
 			await categoriesStore.fetchCategories()
+			console.log('Home page is Mounted')
 		} catch (error) {
 			console.log(error)
 		}

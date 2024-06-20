@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-	import axios from 'axios'
 	import { onMounted, ref } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useThreadsStore } from '../stores/ThreadsStore'
@@ -22,30 +21,29 @@
 	const { threadById } = storeToRefs(threadsStore)
 	const { posts } = storeToRefs(postsStore)
 
+	onMounted(async () => {
+		try {
+			posts.value = []
+			await threadsStore.fetchThreads({ _id: props.id })
+			await postsStore.fetchPosts({ threadId: props.id })
+			console.log('Thread page is Mounted')
+		} catch (error) {
+			console.log(error)
+		}
+	})
+
 	async function addPost(eventData) {
 		const post = {
 			...eventData.post,
 			threadId: props.id,
 		}
 		try {
-			const resPost = await axios.post('/posts', post)
-			const dbPost = resPost.data
-			usePostsStore().createPost(dbPost)
-			const resThread = await axios.patch('/threads/' + props.id, { posts: posts.value })
-		} catch (error) {
-			console.log(error.response.data.msg)
-		}
-	}
-
-	onMounted(async () => {
-		try {
-			posts.value = []
-			await threadsStore.fetchThreads({ _id: props.id })
-			await postsStore.fetchPosts({ threadId: props.id })
+			const dbPost = await postsStore.createPost(post)
+			threadsStore.updateThread(dbPost?._id, props.id)
 		} catch (error) {
 			console.log(error)
 		}
-	})
+	}
 </script>
 
 <style scoped></style>

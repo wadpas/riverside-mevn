@@ -14,12 +14,15 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 	},
 	actions: {
 		async fetchThreads(params) {
-			console.log(params)
-			console.log(this.threads)
 			await axios.get('/threads', { params: params }).then((res) => {
 				this.threads = res.data.threads
 			})
-			console.log(this.threads)
+		},
+		async updateThread(postId, threadId) {
+			const thread = this.threadById(threadId)
+			if (!thread) return
+			await axios.patch('/threads/' + threadId, { posts: thread.posts })
+			thread.posts.push(postId)
 		},
 	},
 })
