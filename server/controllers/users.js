@@ -23,7 +23,10 @@ const getUser = asyncWrapper(async (req, res, next) => {
 
 const updateUser = asyncWrapper(async (req, res, next) => {
 	const { id } = req.params
+	console.log(req.body)
 	const user = await User.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
+	console.log(user)
+
 	if (!user) {
 		return next(customError(`No user with id : ${id}`, 404))
 	}

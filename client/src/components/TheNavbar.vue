@@ -24,10 +24,10 @@
 						href="#">
 						<img
 							class="avatar-small"
-							:src="user.avatar"
-							:alt="`${user.name} profile picture`" />
+							:src="authUser.avatar"
+							:alt="`${authUser.name} profile picture`" />
 						<span>
-							{{ user.name }}
+							{{ authUser.username }}
 							<img
 								class="icon-profile"
 								src="../assets/arrow-profile.svg"
@@ -72,8 +72,18 @@
 </template>
 
 <script setup>
+	import { onMounted, ref } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
 
-	const { authUser: user } = storeToRefs(useUsersStore())
+	const usersStore = useUsersStore()
+	const { authUser } = storeToRefs(usersStore)
+
+	onMounted(async () => {
+		try {
+			await usersStore.fetchUsers()
+		} catch (error) {
+			console.log(error)
+		}
+	})
 </script>
