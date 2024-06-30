@@ -1,3 +1,6 @@
+require('dotenv').config()
+require('express-async-errors')
+
 const express = require('express')
 const cors = require('cors')
 const forums = require('./routes/forums')
@@ -8,7 +11,6 @@ const categories = require('./routes/categories')
 const connectDB = require('./db/connect')
 const notFound = require('./middleware/not-found')
 const errorHandler = require('./middleware/error-handler')
-require('dotenv').config()
 
 const app = express()
 const port = 5000

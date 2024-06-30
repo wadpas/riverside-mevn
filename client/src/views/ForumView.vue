@@ -4,11 +4,11 @@
 			<h1>{{ forumById(props.id)?.name }}</h1>
 			<p class="text-lead">{{ forumById(props.id)?.description }}</p>
 		</div>
-		<a
-			href="new-thread.html"
+		<router-link
+			:to="{ name: 'ThreadCreate', params: { forumId: props.id } }"
 			class="btn-green btn-small">
 			Start a thread
-		</a>
+		</router-link>
 	</div>
 
 	<div class="thread-list push-top">

@@ -83,7 +83,11 @@
 			</div>
 
 			<div class="btn-group space-between">
-				<button class="btn-ghost">Cancel</button>
+				<button
+					class="btn-ghost"
+					@click="cancel">
+					Cancel
+				</button>
 				<button
 					type="submit"
 					class="btn-blue">
@@ -96,8 +100,10 @@
 
 <script setup>
 	import { useUsersStore } from '../stores/UsersStore'
+	import { useRoute, useRouter } from 'vue-router'
 
 	const usersStore = useUsersStore()
+	const router = useRouter()
 
 	const props = defineProps({
 		activeUser: Object,
@@ -107,6 +113,11 @@
 
 	async function save() {
 		usersStore.updateUser()
+		router.push({ name: 'ProfileView' })
+	}
+
+	function cancel() {
+		router.push({ name: 'ProfileView' })
 	}
 </script>
 

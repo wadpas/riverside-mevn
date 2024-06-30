@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { useUsersStore } from '../stores/UsersStore'
 
 export const useThreadsStore = defineStore('ThreadsStore', {
 	state: () => {
 		return {
 			threads: [],
+			usersStore: useUsersStore(),
 		}
 	},
 	getters: {
@@ -23,6 +25,10 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			if (!thread) return
 			await axios.patch('/threads/' + threadId, { posts: thread.posts })
 			thread.posts.push(postId)
+		},
+		async createThread(postId) {
+			// await axios.post('/threads', { title, forumId })
+			console.log(this.usersStore.authUser)
 		},
 	},
 })

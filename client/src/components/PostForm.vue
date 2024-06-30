@@ -17,14 +17,18 @@
 
 <script setup>
 	import { ref, defineEmits } from 'vue'
+	import { storeToRefs } from 'pinia'
+	import { useUsersStore } from '../stores/UsersStore'
 
 	const emit = defineEmits(['save'])
 	const text = ref('')
+	const usersStore = useUsersStore()
+	const { authUser } = storeToRefs(usersStore)
 
 	async function savePost() {
 		const post = {
 			text: text.value,
-			userId: '324d58435944716d4e416832',
+			userId: authUser.value._id,
 		}
 		emit('save', { post })
 		text.value = ''

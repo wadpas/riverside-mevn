@@ -3,30 +3,21 @@
 		<div class="flex-grid">
 			<div class="col-3 push-top">
 				<ProfileCard
+					v-if="!edit"
 					:user="authUser"
 					:posts="posts"
 					:threads="threads" />
 
 				<ProfileCardEditor
+					v-else
 					:activeUser="activeUser"
 					:posts="posts"
 					:threads="threads" />
-
-				<p class="text-xsmall text-faded text-center">Member since june 2003, last visited 4 hours ago</p>
-
-				<div class="text-center">
-					<hr />
-					<a
-						href="edit-profile.html"
-						class="btn-green btn-small">
-						Edit Profile
-					</a>
-				</div>
 			</div>
 
 			<div class="col-7 push-top">
 				<div class="profile-header">
-					<span class="text-lead">{{ userById('324d58435944716d4e416832')?.username }} recent activity</span>
+					<span class="text-lead">{{ authUser?.username }} recent activity</span>
 					<a href="#">See only started threads?</a>
 				</div>
 
@@ -54,7 +45,11 @@
 
 	const { threads } = storeToRefs(threadsStore)
 	const { posts } = storeToRefs(postsStore)
-	const { authUser, activeUser, userById } = storeToRefs(usersStore)
+	const { authUser, activeUser } = storeToRefs(usersStore)
+
+	const props = defineProps({
+		edit: false,
+	})
 
 	onMounted(async () => {
 		try {
