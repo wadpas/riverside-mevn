@@ -24,6 +24,14 @@ export const useUsersStore = defineStore('UsersStore', {
 				this.activeUser = { ...this.userById('324d58435944716d4e416832') }
 			})
 		},
+
+		async appendThreadToUser(threadId, userId) {
+			const user = this.userById(userId)
+			if (!user) return
+			user.threads.push(threadId)
+			await axios.patch('/users/' + userId, { threads: user.threads })
+		},
+
 		async updateUser() {
 			const userIndex = this.users.findIndex((user) => user._id === this.activeUser._id)
 			this.users[userIndex] = this.activeUser

@@ -1,9 +1,15 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { useUsersStore } from '../stores/UsersStore'
+import { useThreadsStore } from '../stores/ThreadsStore'
+import { useForumsStore } from '../stores/ForumsStore'
 
 export const usePostsStore = defineStore('PostsStore', {
 	state: () => ({
 		posts: [],
+		usersStore: useUsersStore(),
+		threadsStore: useThreadsStore(),
+		forumsStore: useForumsStore(),
 	}),
 	getters: {
 		getPostsIds: (state) => {
@@ -15,11 +21,14 @@ export const usePostsStore = defineStore('PostsStore', {
 	},
 	actions: {
 		async fetchPosts(params) {
+			if (this.posts.length > 0) return
 			await axios.get('/posts', { params: params }).then((res) => {
 				this.posts = res.data.posts
 			})
 		},
+
 		async createPost(post) {
+			post.userId = this.usersStore.authUser._id
 			try {
 				const resPost = await axios.post('/posts', post)
 				const dbPost = resPost.data.post

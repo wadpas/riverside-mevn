@@ -38,8 +38,7 @@
 			threadId: props.id,
 		}
 		try {
-			const dbPost = await postsStore.createPost(post)
-			threadsStore.updateThread(dbPost?._id, props.id)
+			postsStore.createPost(post, props.id)
 		} catch (error) {
 			console.log(error)
 		}

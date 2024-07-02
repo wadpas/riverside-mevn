@@ -9,7 +9,7 @@
 			<div class="form-group">
 				<label for="thread_title">Title:</label>
 				<input
-					v-model="title"
+					v-model="thread.title"
 					type="text"
 					id="thread_title"
 					class="form-input"
@@ -19,7 +19,7 @@
 			<div class="form-group">
 				<label for="thread_content">Content:</label>
 				<textarea
-					v-model="text"
+					v-model="post.text"
 					id="thread_content"
 					class="form-input"
 					name="content"
@@ -38,8 +38,6 @@
 			</div>
 		</form>
 	</div>
-
-	{{ forum }}
 </template>
 
 <script setup>
@@ -57,12 +55,15 @@
 		forumId: { type: String },
 	})
 
-	let title = ''
-	let text = ''
+	const thread = {
+		title: '',
+		forumId: props.forumId,
+	}
+	const post = { text: '' }
 
-	function save() {
-		threadsStore.createThread()
-		// router.push({ name: 'ProfileView' })
+	async function save() {
+		const dbThread = await threadsStore.createThread(thread, post, props.forumId)
+		router.push({ name: 'ThreadView', params: { id: dbThread._id } })
 	}
 </script>
 

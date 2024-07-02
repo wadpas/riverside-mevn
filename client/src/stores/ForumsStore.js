@@ -22,5 +22,12 @@ export const useForumsStore = defineStore('ForumsStore', {
 				this.forums = res.data.forums
 			})
 		},
+
+		async appendThreadToForum(threadId, forumId) {
+			const forum = this.forumById(forumId)
+			if (!forum) return
+			forum.threads.push(threadId)
+			await axios.patch('/forums/' + forumId, { threads: forum.threads })
+		},
 	},
 })
