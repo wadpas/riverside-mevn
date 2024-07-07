@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ThreadView from '../views/ThreadView.vue'
-import ThreadCreate from '../views/ThreadCreate.vue'
+import ThreadCreateEditView from '../views/ThreadCreateEditView.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import axios from 'axios'
+import { useForumsStore } from '../stores/ForumsStore'
 
 const routes = [
 	{
@@ -36,27 +37,21 @@ const routes = [
 		name: 'ThreadView',
 		component: ThreadView,
 		props: true,
-		beforeEnter(to, from, next) {
-			axios
-				.get('/threads/' + to.params.id)
-				.then(() => {
-					next()
-				})
-				.catch(() => {
-					next({
-						name: 'NotFound',
-						params: { pathMatch: to.path.substring(1).split('/') },
-						query: to.query,
-						hash: to.hash,
-					})
-				})
-		},
 	},
 	{
-		path: '/forums/:forumId/threads/create',
-		name: 'ThreadCreate',
-		component: ThreadCreate,
+		path: '/forums/threads/sample',
+		name: 'ThreadCreateEditView',
+		component: ThreadCreateEditView,
 		props: true,
+		beforeEnter(to, from, next) {
+			if (Object.keys(useForumsStore().forum).length === 0) {
+				next({
+					name: 'HomeView',
+				})
+			} else {
+				next()
+			}
+		},
 	},
 	{
 		path: '/:pathMatch(.*)*',

@@ -1,5 +1,13 @@
 <template>
-	<h1>{{ threadById(props.id)?.title }}</h1>
+	<h1>
+		<router-link
+			:to="{ name: 'ThreadCreateEditView' }"
+			class="btn-green btn-small"
+			tag="button">
+			Edit
+		</router-link>
+		{{ thread?.title }}
+	</h1>
 
 	<PostList :posts="posts" />
 
@@ -7,7 +15,7 @@
 </template>
 
 <script setup>
-	import { onMounted, ref } from 'vue'
+	import { onMounted, onUnmounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
@@ -18,14 +26,17 @@
 
 	const threadsStore = useThreadsStore()
 	const postsStore = usePostsStore()
-	const { threadById } = storeToRefs(threadsStore)
-	const { posts } = storeToRefs(postsStore)
+	const { threadById, thread } = storeToRefs(threadsStore)
+	const { posts, post } = storeToRefs(postsStore)
 
 	onMounted(async () => {
 		try {
 			posts.value = []
-			await threadsStore.fetchThreads({ _id: props.id })
+			thread.value = {}
+			await threadsStore.fetchThreads()
 			await postsStore.fetchPosts({ threadId: props.id })
+			thread.value = threadById.value(props.id)
+			post.value = posts.value[0]
 			console.log('Thread page is Mounted')
 		} catch (error) {
 			console.log(error)

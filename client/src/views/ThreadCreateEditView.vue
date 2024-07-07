@@ -1,11 +1,8 @@
 <template>
 	<div class="col-full push-top">
-		<h1>
-			Create new thread in
-			{{ forumById(forumId)?.name }}
-		</h1>
+		<h1>{{ !!thread._id ? 'Edit' : 'Create' }} new thread in {{ forum.name }}</h1>
 
-		<form @submit.prevent="save">
+		<form @submit.prevent="true ? update() : create()">
 			<div class="form-group">
 				<label for="thread_title">Title:</label>
 				<input
@@ -28,7 +25,11 @@
 			</div>
 
 			<div class="btn-group">
-				<button class="btn btn-ghost">Cancel</button>
+				<button
+					@click="cancel"
+					class="btn btn-ghost">
+					Cancel
+				</button>
 				<button
 					class="btn btn-blue"
 					type="submit"
@@ -42,28 +43,31 @@
 
 <script setup>
 	import { storeToRefs } from 'pinia'
-	import { useRoute, useRouter } from 'vue-router'
+	import { useRouter } from 'vue-router'
 	import { useForumsStore } from '../stores/ForumsStore'
 	import { useThreadsStore } from '../stores/ThreadsStore'
+	import { usePostsStore } from '../stores/PostsStore'
 
 	const router = useRouter()
 	const forumsStore = useForumsStore()
 	const threadsStore = useThreadsStore()
-	const { forumById } = storeToRefs(forumsStore)
+	const postsStore = usePostsStore()
+	const { forum } = storeToRefs(forumsStore)
+	const { thread } = storeToRefs(threadsStore)
+	const { post } = storeToRefs(postsStore)
 
-	const props = defineProps({
-		forumId: { type: String },
-	})
-
-	const thread = {
-		title: '',
-		forumId: props.forumId,
-	}
-	const post = { text: '' }
-
-	async function save() {
-		const dbThread = await threadsStore.createThread(thread, post, props.forumId)
+	async function create() {
+		const dbThread = await threadsStore.createThread(post.value, forum.value)
 		router.push({ name: 'ThreadView', params: { id: dbThread._id } })
+	}
+
+	async function update() {
+		await threadsStore.updateThread(post.value)
+		router.push({ name: 'ThreadView', params: { id: thread.value._id } })
+	}
+
+	function cancel() {
+		router.push({ name: 'ForumView', params: { id: props.forumId } })
 	}
 </script>
 

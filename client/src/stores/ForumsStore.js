@@ -5,6 +5,7 @@ export const useForumsStore = defineStore('ForumsStore', {
 	state: () => {
 		return {
 			forums: [],
+			forum: {},
 		}
 	},
 	getters: {

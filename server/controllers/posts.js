@@ -22,6 +22,7 @@ const getPost = async (req, res, next) => {
 
 const updatePost = async (req, res, next) => {
 	const { id } = req.params
+	console.log(id)
 	const post = await Post.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
 	if (!post) {
 		return next(customError(`No post with id : ${id}`, 404))

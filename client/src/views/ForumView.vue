@@ -4,11 +4,11 @@
 			<h1>{{ forumById(props.id)?.name }}</h1>
 			<p class="text-lead">{{ forumById(props.id)?.description }}</p>
 		</div>
-		<router-link
-			:to="{ name: 'ThreadCreate', params: { forumId: props.id } }"
+		<button
+			@click="pushNewThread"
 			class="btn-green btn-small">
 			Start a thread
-		</router-link>
+		</button>
 	</div>
 
 	<div class="thread-list push-top">
@@ -20,15 +20,18 @@
 <script setup>
 	import { onMounted } from 'vue'
 	import { storeToRefs } from 'pinia'
+	import { useRouter } from 'vue-router'
 	import { useForumsStore } from '../stores/ForumsStore'
 	import { useThreadsStore } from '../stores/ThreadsStore'
+	import { usePostsStore } from '../stores/PostsStore'
 	import ThreadList from '../components/ThreadList.vue'
 
 	const props = defineProps({ id: String })
-
 	const forumsStore = useForumsStore()
 	const threadsStore = useThreadsStore()
-	const { forumById } = storeToRefs(forumsStore)
+	const postsStore = usePostsStore()
+	const router = useRouter()
+	const { forumById, forum } = storeToRefs(forumsStore)
 	const { threads } = storeToRefs(threadsStore)
 
 	onMounted(async () => {
@@ -36,11 +39,18 @@
 			threads.value = []
 			await forumsStore.fetchForums()
 			await threadsStore.fetchThreads({ forumId: props.id })
+			forum.value = forumById.value(props.id)
 			console.log('Forum page is Mounted')
 		} catch (error) {
 			console.log(error)
 		}
 	})
+
+	function pushNewThread() {
+		threadsStore.thread = {}
+		postsStore.post = {}
+		router.push({ name: 'ThreadCreateEditView' })
+	}
 </script>
 
 <style scoped></style>

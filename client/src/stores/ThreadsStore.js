@@ -8,6 +8,7 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 	state: () => {
 		return {
 			threads: [],
+			thread: {},
 			usersStore: useUsersStore(),
 			postsStore: usePostsStore(),
 			forumsStore: useForumsStore(),
@@ -33,27 +34,36 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			await axios.patch('/threads/' + threadId, { posts: thread.posts })
 		},
 
-		async createThread(thread, post, forumId) {
-			thread.contributors = []
-			thread.firstPostId = '2d2d61706a4442775342435a'
-			thread.lastPostAt = Math.floor(Date.now() / 1000)
-			thread.lastPostId = '7a66707a6e55566834445361'
-			thread.posts = []
-			thread.publishedAt = Math.floor(Date.now() / 1000)
-			thread.slug = thread.title.toLowerCase().replace(/ /g, '-')
-			thread.userId = this.usersStore.authUser._id
+		async createThread(post, forum) {
+			this.thread.contributors = []
+			this.thread.firstPostId = '2d2d61706a4442775342435a'
+			this.thread.lastPostAt = Math.floor(Date.now() / 1000)
+			this.thread.lastPostId = '7a66707a6e55566834445361'
+			this.thread.posts = []
+			this.thread.publishedAt = Math.floor(Date.now() / 1000)
+			this.thread.slug = this.thread.title.toLowerCase().replace(/ /g, '-')
+			this.thread.userId = this.usersStore.authUser._id
+			this.thread.forumId = forum._id
 
-			const resThread = await axios.post('/threads', thread)
+			const resThread = await axios.post('/threads', this.thread)
 			const dbThread = resThread.data.thread
 			this.threads.push(dbThread)
 			post.threadId = dbThread._id
 
 			const createdPost = await this.postsStore.createPost(post)
 			this.appendPostToThread(createdPost._id, dbThread._id)
-			this.forumsStore.appendThreadToForum(dbThread._id, forumId)
+			this.forumsStore.appendThreadToForum(dbThread._id, forum._id)
 			this.usersStore.appendThreadToUser(dbThread._id, this.usersStore.authUser._id)
 
 			return dbThread
+		},
+
+		async updateThread() {
+			await axios.patch('/threads/' + this.thread._id, this.thread)
+			const index = this.threads.findIndex((item) => item._id === this.thread._id)
+			this.threads[index] = this.thread
+
+			await this.postsStore.updatePost()
 		},
 	},
 })

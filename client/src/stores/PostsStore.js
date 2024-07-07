@@ -7,6 +7,7 @@ import { useForumsStore } from '../stores/ForumsStore'
 export const usePostsStore = defineStore('PostsStore', {
 	state: () => ({
 		posts: [],
+		post: {},
 		usersStore: useUsersStore(),
 		threadsStore: useThreadsStore(),
 		forumsStore: useForumsStore(),
@@ -37,6 +38,12 @@ export const usePostsStore = defineStore('PostsStore', {
 			} catch (error) {
 				console.log(error.response.data.msg)
 			}
+		},
+
+		async updatePost() {
+			await axios.patch('/posts/' + this.post._id, this.post)
+			const index = this.posts.findIndex((item) => item._id === this.post._id)
+			this.posts[index] = this.post
 		},
 	},
 })
