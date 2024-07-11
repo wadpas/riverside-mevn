@@ -2,7 +2,7 @@
 	<div class="col-full push-top">
 		<h1>{{ !!thread._id ? 'Edit' : 'Create' }} new thread in {{ forum.name }}</h1>
 
-		<form @submit.prevent="true ? update() : create()">
+		<form @submit.prevent="!!thread._id ? update() : create()">
 			<div class="form-group">
 				<label for="thread_title">Title:</label>
 				<input
@@ -33,7 +33,7 @@
 				<button
 					class="btn btn-blue"
 					type="submit"
-					name="Publish">
+					name=" Publish">
 					Publish
 				</button>
 			</div>

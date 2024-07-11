@@ -1,33 +1,35 @@
 <template>
-	<div
-		v-for="post in posts"
-		class="post">
-		<div class="user-info">
-			<a
-				href="#"
-				class="user-name">
-				{{ userById(post.userId)?.name }}
-			</a>
-			<a href="#">
-				<img
-					class="avatar-large"
-					:src="userById(post.userId)?.avatar"
-					alt="" />
-			</a>
-
-			<p class="desktop-only text-small">107 posts</p>
-		</div>
-
-		<div class="post-content">
-			<div>
-				<p>
-					{{ post.text }}
-				</p>
+	<div class="post-list">
+		<div
+			v-for="post in posts"
+			class="post">
+			<div class="user-info">
+				<a
+					href="#"
+					class="user-name">
+					{{ userById(post.userId)?.name }}
+				</a>
+				<a href="#">
+					<img
+						class="avatar-large"
+						:src="userById(post.userId)?.avatar"
+						alt="" />
+				</a>
+				<p class="desktop-only text-small">{{ getUserPosts(post.userId)?.length }} posts</p>
+				<p class="desktop-only text-small">{{ userById(post.userId)?.threads.length }} threads</p>
 			</div>
-		</div>
 
-		<div class="post-date text-faded">
-			<AppDate :timestamp="post.publishedAt" />
+			<div class="post-content">
+				<div>
+					<p>
+						{{ post.text }}
+					</p>
+				</div>
+			</div>
+
+			<div class="post-date text-faded">
+				<AppDate :timestamp="post.publishedAt" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -36,11 +38,14 @@
 	import { onMounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
+	import { usePostsStore } from '../stores/PostsStore'
 	import AppDate from './AppDate.vue'
 
 	const props = defineProps({ posts: Array })
 	const usersStore = useUsersStore()
+	const postsStore = usePostsStore()
 	const { userById } = storeToRefs(usersStore)
+	const { getUserPosts } = storeToRefs(postsStore)
 
 	onMounted(async () => {
 		try {

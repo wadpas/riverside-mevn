@@ -27,31 +27,39 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			})
 		},
 
-		async appendPostToThread(postId, threadId) {
+		async appendToThread(threadId, postId, userId) {
 			const thread = this.threadById(threadId)
 			if (!thread) return
 			thread.posts.push(postId)
-			await axios.patch('/threads/' + threadId, { posts: thread.posts })
+			await axios.patch('/threads/' + threadId, {
+				posts: thread.posts,
+			})
+			if (this.thread.contributors.includes(userId)) return
+			thread.posts.push(userId)
+			thread.contributors.push(userId)
+			await axios.patch('/threads/' + threadId, {
+				contributors: thread.contributors,
+			})
 		},
 
 		async createThread(post, forum) {
 			this.thread.contributors = []
 			this.thread.firstPostId = '2d2d61706a4442775342435a'
-			this.thread.lastPostAt = Math.floor(Date.now() / 1000)
+			this.thread.lastPostAt = Date.now().toString()
 			this.thread.lastPostId = '7a66707a6e55566834445361'
 			this.thread.posts = []
-			this.thread.publishedAt = Math.floor(Date.now() / 1000)
+			this.thread.publishedAt = Date.now().toString()
 			this.thread.slug = this.thread.title.toLowerCase().replace(/ /g, '-')
 			this.thread.userId = this.usersStore.authUser._id
 			this.thread.forumId = forum._id
 
-			const resThread = await axios.post('/threads', this.thread)
+			const resThread = await axios.post('/threads', this.thread, null)
 			const dbThread = resThread.data.thread
 			this.threads.push(dbThread)
 			post.threadId = dbThread._id
 
-			const createdPost = await this.postsStore.createPost(post)
-			this.appendPostToThread(createdPost._id, dbThread._id)
+			this.postsStore.createPost(post)
+			this.appendToThread(dbThread._id, createdPost._id)
 			this.forumsStore.appendThreadToForum(dbThread._id, forum._id)
 			this.usersStore.appendThreadToUser(dbThread._id, this.usersStore.authUser._id)
 
