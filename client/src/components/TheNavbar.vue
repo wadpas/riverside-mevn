@@ -14,7 +14,6 @@
 			<div class="middle bar"></div>
 			<div class="bottom bar"></div>
 		</div>
-
 		<!-- use .navbar-open to open nav -->
 		<nav class="navbar">
 			<ul>
@@ -24,10 +23,10 @@
 						href="#">
 						<img
 							class="avatar-small"
-							:src="authUser.avatar"
-							:alt="`${authUser.name} profile picture`" />
+							:src="authUser?.avatar"
+							:alt="`${authUser?.name} profile picture`" />
 						<span>
-							{{ authUser.username }}
+							{{ authUser?.username }}
 							<img
 								class="icon-profile"
 								src="../assets/arrow-profile.svg"
@@ -72,18 +71,9 @@
 </template>
 
 <script setup>
-	import { onMounted, ref } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
 
 	const usersStore = useUsersStore()
 	const { authUser } = storeToRefs(usersStore)
-
-	onMounted(async () => {
-		try {
-			await usersStore.fetchUsers()
-		} catch (error) {
-			console.log(error)
-		}
-	})
 </script>

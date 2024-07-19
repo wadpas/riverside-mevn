@@ -3,6 +3,7 @@ const { customError } = require('../errors/custom-error')
 
 const getPosts = async (req, res) => {
 	const posts = await Post.find(req.query)
+
 	res.status(200).json({ posts })
 }
 

@@ -8,5 +8,13 @@
 </template>
 
 <script setup>
+	import { onBeforeMount } from 'vue'
 	import TheNavbar from './components/TheNavbar.vue'
+	import { useUsersStore } from './stores/UsersStore'
+
+	const usersStore = useUsersStore()
+
+	onBeforeMount(async () => {
+		await usersStore.fetchAuthUser('61687a737371396b62797031')
+	})
 </script>

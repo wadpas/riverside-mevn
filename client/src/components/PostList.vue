@@ -15,7 +15,8 @@
 						:src="userById(post.userId)?.avatar"
 						alt="" />
 				</a>
-				<p class="desktop-only text-small">{{ getUserPosts(post.userId)?.length }} posts</p>
+
+				<p class="desktop-only text-small">{{ userById(post.userId)?.postsCount }} posts</p>
 				<p class="desktop-only text-small">{{ userById(post.userId)?.threads.length }} threads</p>
 			</div>
 
@@ -35,19 +36,16 @@
 </template>
 
 <script setup>
-	import { onMounted } from 'vue'
+	import { onBeforeMount } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
-	import { usePostsStore } from '../stores/PostsStore'
 	import AppDate from './AppDate.vue'
 
 	const props = defineProps({ posts: Array })
 	const usersStore = useUsersStore()
-	const postsStore = usePostsStore()
 	const { userById } = storeToRefs(usersStore)
-	const { getUserPosts } = storeToRefs(postsStore)
 
-	onMounted(async () => {
+	onBeforeMount(async () => {
 		try {
 			await usersStore.fetchUsers()
 		} catch (error) {

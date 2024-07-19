@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { findById } from '../helpers'
 
 export const useForumsStore = defineStore('ForumsStore', {
 	state: () => {
@@ -10,17 +11,24 @@ export const useForumsStore = defineStore('ForumsStore', {
 	},
 	getters: {
 		forumsByIds(state) {
-			return (ids) => ids.map((id) => state.forums.find((forum) => forum._id === id))
+			return (ids) => ids.map((id) => findById(state.forums, id))
 		},
 		forumById(state) {
-			return (id) => state.forums.find((forum) => forum._id === id)
+			return (id) => findById(state.forums, id)
 		},
 	},
 	actions: {
 		async fetchForums() {
-			if (this.forums.length) return
 			await axios.get('/forums').then((res) => {
 				this.forums = res.data.forums
+			})
+		},
+
+		async fetchForum(id) {
+			this.forum = this.forumById(id)
+			if (this.forum) return
+			await axios.get(`/forums/${id}`).then((res) => {
+				this.forum = res.data.forum
 			})
 		},
 

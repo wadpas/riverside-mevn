@@ -13,23 +13,23 @@
 		<a
 			href="#"
 			class="link-unstyled">
-			{{ userById(thread.userId)?.name }}
+			{{ userById(thread?.userId)?.name }}
 		</a>
 		,
 		<AppDate :timestamp="thread?.publishedAt" />
 		<span
 			style="float: right; margin-top: 2px"
 			class="hide-mobile text-faded text-small">
-			{{ thread.posts?.length - 1 }} replies by {{ thread.contributors?.length }} contributors
+			{{ thread?.posts.length - 1 }} replies by {{ thread?.contributors.length }} contributors
 		</span>
 	</p>
-	<PostList :posts="getThreadPosts(id)" />
+	<PostList :posts="posts" />
 
 	<PostForm @save="addPost" />
 </template>
 
 <script setup>
-	import { onMounted, onUnmounted } from 'vue'
+	import { onBeforeMount, onUnmounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
@@ -39,26 +39,19 @@
 	import AppDate from '../components/AppDate.vue'
 
 	const props = defineProps({ id: String })
-
 	const threadsStore = useThreadsStore()
 	const postsStore = usePostsStore()
 	const usersStore = useUsersStore()
-	const { threadById, thread } = storeToRefs(threadsStore)
-	const { posts, post, getThreadPosts } = storeToRefs(postsStore)
+	const { thread } = storeToRefs(threadsStore)
+	const { posts } = storeToRefs(postsStore)
 	const { userById } = storeToRefs(usersStore)
 
-	onMounted(async () => {
-		try {
-			posts.value = []
-			thread.value = {}
-			await threadsStore.fetchThreads()
-			await postsStore.fetchPosts()
-			thread.value = threadById.value(props.id)
-			post.value = posts.value[0]
-			console.log('Thread page is Mounted')
-		} catch (error) {
-			console.log(error)
-		}
+	onBeforeMount(async () => {
+		posts.value = []
+		await threadsStore.fetchThread(props.id)
+		await postsStore.fetchPosts({ threadId: props.id })
+		const usersIds = posts.value.map((p) => p.userId)
+		usersStore.fetchUsers({ usersIds })
 	})
 
 	async function addPost(eventData) {

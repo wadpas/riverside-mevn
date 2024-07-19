@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { findById } from '../helpers'
 import { useUsersStore } from '../stores/UsersStore'
 import { usePostsStore } from '../stores/PostsStore'
 import { useForumsStore } from '../stores/ForumsStore'
@@ -16,14 +17,21 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 	},
 	getters: {
 		threadById(state) {
-			return (id) => state.threads.find((thread) => thread._id === id)
+			return (id) => findById(state.threads, id)
 		},
 	},
 	actions: {
 		async fetchThreads(params) {
-			if (this.threads.length > 0) return
 			await axios.get('/threads', { params: params }).then((res) => {
 				this.threads = res.data.threads
+			})
+		},
+
+		async fetchThread(id) {
+			this.thread = this.threadById(id)
+			if (this.thread) return
+			await axios.get(`/threads/${id}`).then((res) => {
+				this.thread = res.data.thread
 			})
 		},
 
@@ -35,7 +43,6 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 				posts: thread.posts,
 			})
 			if (this.thread.contributors.includes(userId)) return
-			thread.posts.push(userId)
 			thread.contributors.push(userId)
 			await axios.patch('/threads/' + threadId, {
 				contributors: thread.contributors,
@@ -58,8 +65,9 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			this.threads.push(dbThread)
 			post.threadId = dbThread._id
 
-			this.postsStore.createPost(post)
-			this.appendToThread(dbThread._id, createdPost._id)
+			const createdPost = await this.postsStore.createPost(post)
+
+			this.appendToThread(dbThread._id, createdPost._id, this.usersStore.authUser._id)
 			this.forumsStore.appendThreadToForum(dbThread._id, forum._id)
 			this.usersStore.appendThreadToUser(dbThread._id, this.usersStore.authUser._id)
 

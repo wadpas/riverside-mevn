@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { findById, upsert } from '../helpers'
 
 export const useUsersStore = defineStore('UsersStore', {
 	state: () => {
@@ -11,17 +12,21 @@ export const useUsersStore = defineStore('UsersStore', {
 	},
 	getters: {
 		userById(state) {
-			return (id) => state.users.find((user) => user._id === id)
+			return (id) => findById(state.users, id)
 		},
 	},
-
 	actions: {
-		async fetchUsers() {
-			if (this.users.length) return
-			await axios.get('/users').then((res) => {
-				this.users = res.data.users
-				this.authUser = { ...this.userById('324d58435944716d4e416832') }
-				this.activeUser = { ...this.userById('324d58435944716d4e416832') }
+		async fetchAuthUser(id) {
+			await axios.get(`/users/${id}`).then((res) => {
+				this.authUser = res.data.user
+				upsert(this.users, this.authUser)
+			})
+			return this.authUser
+		},
+
+		async fetchUsers(params) {
+			await axios.get('/users', { params: params }).then((res) => {
+				res.data.users.forEach((user) => upsert(this.users, user))
 			})
 		},
 
@@ -29,7 +34,15 @@ export const useUsersStore = defineStore('UsersStore', {
 			const user = this.userById(userId)
 			if (!user) return
 			user.threads.push(threadId)
-			await axios.patch('/users/' + userId, { threads: user.threads })
+			console.log(user.threads)
+			await axios.patch(`/users/${userId}`, { threads: user.threads })
+		},
+
+		async appendPostToUser(userId) {
+			const user = this.userById(userId)
+			if (!user) return
+			user.postsCount += 1
+			await axios.patch(`/users/${userId}`, { postsCount: user.postsCount })
 		},
 
 		async updateUser() {

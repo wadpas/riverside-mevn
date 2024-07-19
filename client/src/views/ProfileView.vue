@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-	import { onMounted, ref } from 'vue'
+	import { onBeforeMount, onMounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
@@ -51,13 +51,9 @@
 		edit: false,
 	})
 
-	onMounted(async () => {
-		try {
-			await usersStore.fetchUsers()
-			await postsStore.fetchPosts({ userId: authUser._id })
-			await threadsStore.fetchThreads({ userId: authUser._id })
-		} catch (error) {
-			console.log(error)
-		}
+	onBeforeMount(async () => {
+		const user = await usersStore.fetchAuthUser('61687a737371396b62797031')
+		postsStore.fetchPosts({ userId: user._id })
+		threadsStore.fetchThreads({ userId: user._id })
 	})
 </script>

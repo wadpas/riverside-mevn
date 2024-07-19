@@ -2,7 +2,7 @@ const User = require('../models/user')
 const { customError } = require('../errors/custom-error')
 
 const getUsers = async (req, res) => {
-	const users = await User.find({})
+	const users = await User.find({ _id: { $in: req.query.usersIds } })
 	res.status(200).json({ users })
 }
 
@@ -22,7 +22,7 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
 	const { id } = req.params
-	const user = await User.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
+	const user = await User.findOneAndUpdate({ _id: id }, { $inc: { postsCount: 1 } }, { new: true, runValidation: true })
 	if (!user) {
 		return next(customError(`No user with id : ${id}`, 404))
 	}

@@ -7,7 +7,6 @@ import { useForumsStore } from '../stores/ForumsStore'
 export const usePostsStore = defineStore('PostsStore', {
 	state: () => ({
 		posts: [],
-
 		post: {},
 		usersStore: useUsersStore(),
 		threadsStore: useThreadsStore(),
@@ -17,15 +16,12 @@ export const usePostsStore = defineStore('PostsStore', {
 		getUserPosts: (state) => {
 			return (id) => state.posts.filter((post) => post.userId === id)
 		},
-		getThreadPosts: (state) => {
-			return (id) => state.posts.filter((post) => post.threadId === id)
-		},
 	},
 	actions: {
 		async fetchPosts(params) {
-			if (this.posts.length > 0) return
 			await axios.get('/posts', { params: params }).then((res) => {
 				this.posts = res.data.posts
+				this.post = res.data.posts[0]
 			})
 		},
 
@@ -35,7 +31,8 @@ export const usePostsStore = defineStore('PostsStore', {
 				const resPost = await axios.post('/posts', post)
 				const dbPost = resPost.data.post
 				this.posts.push(dbPost)
-				this.threadsStore.appendToThread(this.threadsStore.thread._id, dbPost._id, this.usersStore.authUser._id)
+				this.threadsStore.appendToThread(this.threadsStore.thread._id, dbPost._id, post.userId)
+				this.usersStore.appendPostToUser(post.userId)
 				return dbPost
 			} catch (error) {
 				console.log(error.response.data.msg)

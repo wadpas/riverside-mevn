@@ -14,7 +14,7 @@
 
 <script setup>
 	import ForumList from '../components/ForumList.vue'
-	import { onMounted } from 'vue'
+	import { onBeforeMount } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useCategoriesStore } from '../stores/CategoriesStore'
 	import { useForumsStore } from '../stores/ForumsStore'
@@ -24,13 +24,8 @@
 	const { categories } = storeToRefs(categoriesStore)
 	const { forumsByIds } = storeToRefs(forumsStore)
 
-	onMounted(async () => {
-		try {
-			await forumsStore.fetchForums()
-			await categoriesStore.fetchCategories()
-			console.log('Home page is Mounted')
-		} catch (error) {
-			console.log(error)
-		}
+	onBeforeMount(async () => {
+		await forumsStore.fetchForums()
+		categoriesStore.fetchCategories()
 	})
 </script>
