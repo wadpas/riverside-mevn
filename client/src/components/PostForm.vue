@@ -2,7 +2,7 @@
 	<form @submit.prevent="savePost">
 		<div class="form-group">
 			<textarea
-				v-model="text"
+				v-model="post.text"
 				name=""
 				id=""
 				cols="30"
@@ -18,14 +18,13 @@
 <script setup>
 	import { ref } from 'vue'
 
+	const props = defineProps({ post: {} })
 	const emit = defineEmits(['save'])
-	const text = ref('')
+
+	let post = ref({ ...props.post })
 
 	async function savePost() {
-		const post = {
-			text: text.value,
-		}
-		emit('save', { post })
-		text.value = ''
+		emit('save', post)
+		post = {}
 	}
 </script>

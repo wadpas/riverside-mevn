@@ -21,11 +21,26 @@
 			</div>
 
 			<div class="post-content">
-				<div>
-					<p>
+				<div class="col-full">
+					<PostForm
+						v-if="editing === post._id"
+						:post="post"
+						@save="handleUpdate">
+						Edit Mode
+					</PostForm>
+					<p v-else>
 						{{ post.text }}
 					</p>
 				</div>
+				<a
+					v-if="post.userId === authUser._id"
+					@click.prevent="toggleEditMode(post._id)"
+					href="#"
+					style="margin-left: auto; padding-left: 10px"
+					class="link-unstyled"
+					title="Make a change">
+					<fa icon="pencil-alt" />
+				</a>
 			</div>
 
 			<div class="post-date text-faded">
@@ -36,14 +51,19 @@
 </template>
 
 <script setup>
-	import { onBeforeMount } from 'vue'
+	import { onBeforeMount, ref } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
+	import { usePostsStore } from '../stores/PostsStore'
 	import AppDate from './AppDate.vue'
+	import PostForm from './PostForm.vue'
 
 	const props = defineProps({ posts: Array })
 	const usersStore = useUsersStore()
-	const { userById } = storeToRefs(usersStore)
+	const postsStore = usePostsStore()
+	const { userById, authUser } = storeToRefs(usersStore)
+
+	let editing = ref(null)
 
 	onBeforeMount(async () => {
 		try {
@@ -52,6 +72,15 @@
 			console.log(error)
 		}
 	})
+
+	function toggleEditMode(id) {
+		editing.value = id === editing.value ? null : id
+	}
+
+	function handleUpdate(event) {
+		postsStore.updatePost(event.value)
+		editing.value = null
+	}
 </script>
 
 <style scoped></style>

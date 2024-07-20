@@ -1,7 +1,7 @@
 <template>
 	<div class="col-full push-top">
-		<h1>{{ !!thread._id ? 'Edit' : 'Create' }} new thread in {{ forum.name }}</h1>
-
+		<h1>{{ !!thread._id ? `Edit ${thread.title}` : 'Create' }} thread in {{ forum.name }}</h1>
+		{{ post }}
 		<form @submit.prevent="!!thread._id ? update() : create()">
 			<div class="form-group">
 				<label for="thread_title">Title:</label>
@@ -67,7 +67,7 @@
 	}
 
 	function cancel() {
-		router.push({ name: 'ForumView', params: { id: props.forumId } })
+		router.push({ name: 'ForumView', params: { id: forum.value_id } })
 	}
 </script>
 

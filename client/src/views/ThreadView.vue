@@ -1,12 +1,11 @@
 <template>
 	<h1>
+		{{ thread?.title }}
 		<router-link
 			:to="{ name: 'ThreadCreateEditView' }"
-			class="btn-green btn-small"
-			tag="button">
-			Edit
+			v-if="thread?.userId === authUser._id">
+			<fa icon="pencil-alt" />
 		</router-link>
-		{{ thread?.title }}
 	</h1>
 	<p>
 		By
@@ -25,7 +24,9 @@
 	</p>
 	<PostList :posts="posts" />
 
-	<PostForm @save="addPost" />
+	<PostForm
+		:post="{}"
+		@save="addPost" />
 </template>
 
 <script setup>
@@ -44,7 +45,7 @@
 	const usersStore = useUsersStore()
 	const { thread } = storeToRefs(threadsStore)
 	const { posts } = storeToRefs(postsStore)
-	const { userById } = storeToRefs(usersStore)
+	const { userById, authUser } = storeToRefs(usersStore)
 
 	onBeforeMount(async () => {
 		posts.value = []

@@ -22,6 +22,7 @@ export const usePostsStore = defineStore('PostsStore', {
 			await axios.get('/posts', { params: params }).then((res) => {
 				this.posts = res.data.posts
 				this.post = res.data.posts[0]
+				// this.post = { ...res.data.posts[0] }
 			})
 		},
 
@@ -39,8 +40,9 @@ export const usePostsStore = defineStore('PostsStore', {
 			}
 		},
 
-		async updatePost() {
-			await axios.patch('/posts/' + this.post._id, this.post)
+		async updatePost(newPost) {
+			if (newPost) this.post = newPost
+			await axios.patch(`/posts/{this.post._id}`, this.post)
 			const index = this.posts.findIndex((item) => item._id === this.post._id)
 			this.posts[index] = this.post
 		},
