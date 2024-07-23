@@ -3,12 +3,10 @@ import { defineStore } from 'pinia'
 import { findById } from '../helpers'
 
 export const useForumsStore = defineStore('ForumsStore', {
-	state: () => {
-		return {
-			forums: [],
-			forum: {},
-		}
-	},
+	state: () => ({
+		forums: [],
+		forum: {},
+	}),
 	getters: {
 		forumsByIds(state) {
 			return (ids) => ids.map((id) => findById(state.forums, id))

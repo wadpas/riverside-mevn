@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ThreadView from '../views/ThreadView.vue'
-import ThreadCreateEditView from '../views/ThreadCreateEditView.vue'
+import ThreadCreditView from '../views/ThreadCreditView.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
@@ -38,10 +38,11 @@ const routes = [
 		component: ThreadView,
 		props: true,
 	},
+
 	{
 		path: '/forums/threads/sample',
-		name: 'ThreadCreateEditView',
-		component: ThreadCreateEditView,
+		name: 'ThreadCreditView',
+		component: ThreadCreditView,
 		props: true,
 		beforeEnter(to, from, next) {
 			if (Object.keys(useForumsStore().forum).length === 0) {

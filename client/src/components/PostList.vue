@@ -22,12 +22,12 @@
 
 			<div class="post-content">
 				<div class="col-full">
-					<PostForm
+					<TextForm
 						v-if="editing === post._id"
 						:post="post"
-						@save="handleUpdate">
+						@savePost="handleUpdate">
 						Edit Mode
-					</PostForm>
+					</TextForm>
 					<p v-else>
 						{{ post.text }}
 					</p>
@@ -56,7 +56,7 @@
 	import { useUsersStore } from '../stores/UsersStore'
 	import { usePostsStore } from '../stores/PostsStore'
 	import AppDate from './AppDate.vue'
-	import PostForm from './PostForm.vue'
+	import TextForm from './TextForm.vue'
 
 	const props = defineProps({ posts: Array })
 	const usersStore = useUsersStore()

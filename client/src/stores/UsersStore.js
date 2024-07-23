@@ -3,13 +3,11 @@ import { defineStore } from 'pinia'
 import { findById, upsert } from '../helpers'
 
 export const useUsersStore = defineStore('UsersStore', {
-	state: () => {
-		return {
-			users: [],
-			authUser: {},
-			activeUser: {},
-		}
-	},
+	state: () => ({
+		users: [],
+		authUser: {},
+		activeUser: {},
+	}),
 	getters: {
 		userById(state) {
 			return (id) => findById(state.users, id)

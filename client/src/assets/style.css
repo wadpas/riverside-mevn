@@ -1534,21 +1534,8 @@ textarea.form-input {
 }
 
 .form-group {
-	margin-bottom: 12px;
 	width: 100%;
 	display: inline-block;
-}
-
-.form-label,
-.form-group > label {
-	margin-bottom: 5px;
-	display: inline-block;
-	color: #767676;
-}
-
-.form-label-password,
-.form-group > label-password {
-	margin-bottom: 0px;
 }
 
 @media (min-width: 240px) and (max-width: 720px) {

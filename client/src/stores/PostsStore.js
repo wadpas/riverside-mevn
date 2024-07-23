@@ -21,13 +21,13 @@ export const usePostsStore = defineStore('PostsStore', {
 		async fetchPosts(params) {
 			await axios.get('/posts', { params: params }).then((res) => {
 				this.posts = res.data.posts
-				this.post = res.data.posts[0]
-				// this.post = { ...res.data.posts[0] }
+				this.post = { ...res.data.posts[0] }
 			})
 		},
 
 		async createPost(post) {
 			post.userId = this.usersStore.authUser._id
+			post.threadId = post.threadId || this.threadsStore.thread._id
 			try {
 				const resPost = await axios.post('/posts', post)
 				const dbPost = resPost.data.post
@@ -42,7 +42,7 @@ export const usePostsStore = defineStore('PostsStore', {
 
 		async updatePost(newPost) {
 			if (newPost) this.post = newPost
-			await axios.patch(`/posts/{this.post._id}`, this.post)
+			await axios.patch(`/posts/${this.post._id}`, this.post)
 			const index = this.posts.findIndex((item) => item._id === this.post._id)
 			this.posts[index] = this.post
 		},

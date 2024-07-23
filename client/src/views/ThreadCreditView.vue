@@ -1,43 +1,9 @@
 <template>
 	<div class="col-full push-top">
 		<h1>{{ !!thread._id ? `Edit ${thread.title}` : 'Create' }} thread in {{ forum.name }}</h1>
-		{{ post }}
-		<form @submit.prevent="!!thread._id ? update() : create()">
-			<div class="form-group">
-				<label for="thread_title">Title:</label>
-				<input
-					v-model="thread.title"
-					type="text"
-					id="thread_title"
-					class="form-input"
-					name="title" />
-			</div>
-
-			<div class="form-group">
-				<label for="thread_content">Content:</label>
-				<textarea
-					v-model="post.text"
-					id="thread_content"
-					class="form-input"
-					name="content"
-					rows="8"
-					cols="140"></textarea>
-			</div>
-
-			<div class="btn-group">
-				<button
-					@click="cancel"
-					class="btn btn-ghost">
-					Cancel
-				</button>
-				<button
-					class="btn btn-blue"
-					type="submit"
-					name=" Publish">
-					Publish
-				</button>
-			</div>
-		</form>
+		<TextForm
+			:post="post"
+			:thread="thread" />
 	</div>
 </template>
 
@@ -47,6 +13,7 @@
 	import { useForumsStore } from '../stores/ForumsStore'
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
+	import TextForm from '../components/TextForm.vue'
 
 	const router = useRouter()
 	const forumsStore = useForumsStore()

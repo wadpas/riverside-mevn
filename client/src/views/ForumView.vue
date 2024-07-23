@@ -48,6 +48,6 @@
 	function pushNewThread() {
 		threadsStore.thread = {}
 		postsStore.post = {}
-		router.push({ name: 'ThreadCreateEditView' })
+		router.push({ name: 'ThreadCreditView' })
 	}
 </script>

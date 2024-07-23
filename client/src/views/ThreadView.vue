@@ -2,7 +2,7 @@
 	<h1>
 		{{ thread?.title }}
 		<router-link
-			:to="{ name: 'ThreadCreateEditView' }"
+			:to="{ name: 'ThreadCreditView' }"
 			v-if="thread?.userId === authUser._id">
 			<fa icon="pencil-alt" />
 		</router-link>
@@ -23,20 +23,17 @@
 		</span>
 	</p>
 	<PostList :posts="posts" />
-
-	<PostForm
-		:post="{}"
-		@save="addPost" />
+	<TextForm />
 </template>
 
 <script setup>
-	import { onBeforeMount, onUnmounted } from 'vue'
+	import { onBeforeMount, onMounted, onUnmounted } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
 	import { useUsersStore } from '../stores/UsersStore'
 	import PostList from '../components/PostList.vue'
-	import PostForm from '../components/PostForm.vue'
+	import TextForm from '../components/TextForm.vue'
 	import AppDate from '../components/AppDate.vue'
 
 	const props = defineProps({ id: String })
@@ -54,18 +51,4 @@
 		const usersIds = posts.value.map((p) => p.userId)
 		usersStore.fetchUsers({ usersIds })
 	})
-
-	async function addPost(eventData) {
-		const post = {
-			...eventData.post,
-			threadId: props.id,
-		}
-		try {
-			postsStore.createPost(post, props.id)
-		} catch (error) {
-			console.log(error)
-		}
-	}
 </script>
-
-<style scoped></style>

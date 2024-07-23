@@ -2,11 +2,9 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 
 export const useCategoriesStore = defineStore('CategoriesStore', {
-	state: () => {
-		return {
-			categories: [],
-		}
-	},
+	state: () => ({
+		categories: [],
+	}),
 	actions: {
 		async fetchCategories() {
 			if (this.categories.length) return
