@@ -4,15 +4,14 @@ const ForumSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
-			required: [true, 'field is required'],
+			maxlength: [30, 'Name can not be more than 20 characters'],
+			required: [true, 'Name is required'],
 			trim: true,
-			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		slug: {
 			type: String,
-			required: [true, 'field is required'],
+			maxlength: [30, 'Slug can not be more than 20 characters'],
 			trim: true,
-			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		forums: {
 			type: [mongoose.Types.ObjectId],

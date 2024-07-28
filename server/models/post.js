@@ -19,9 +19,9 @@ const PostSchema = new mongoose.Schema(
 		},
 		text: {
 			type: String,
-			required: [true, 'field is required'],
+			maxlength: [2000, 'Text can not be more than 200 characters'],
+			required: [true, 'Text is required'],
 			trim: true,
-			maxlength: [2000, 'field can not be more than 200 characters'],
 		},
 		threadId: {
 			type: mongoose.Types.ObjectId,

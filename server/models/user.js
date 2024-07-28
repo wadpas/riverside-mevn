@@ -1,21 +1,22 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const UserSchema = new mongoose.Schema(
 	{
 		avatar: {
 			type: String,
-			required: true,
 		},
 		bio: {
 			type: String,
+			maxlength: [100, 'Bio can not be more than 100 characters'],
 			trim: true,
-			maxlength: [100, 'field can not be more than 100 characters'],
 		},
 		email: {
 			type: String,
+			maxlength: [30, 'Email can not be more than 20 characters'],
+			required: [true, 'Email is required'],
 			trim: true,
-			required: true,
-			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		lastVisitAt: {
 			type: Date,
@@ -23,9 +24,9 @@ const UserSchema = new mongoose.Schema(
 		},
 		name: {
 			type: String,
-			required: [true, 'field is required'],
+			maxlength: [30, 'Name can not be more than 20 characters'],
+			required: [true, 'Name is required'],
 			trim: true,
-			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		isModerator: {
 			type: Boolean,
@@ -36,15 +37,14 @@ const UserSchema = new mongoose.Schema(
 		},
 		username: {
 			type: String,
-			required: [true, 'field is required'],
+			maxlength: [30, 'Username can not be more than 20 characters'],
+			required: [true, 'Username is required'],
 			trim: true,
-			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		usernameLower: {
 			type: String,
-			required: [true, 'field is required'],
+			maxlength: [30, 'Username Lower can not be more than 20 characters'],
 			trim: true,
-			maxlength: [30, 'field can not be more than 20 characters'],
 		},
 		postsCount: {
 			type: Number,
@@ -58,5 +58,20 @@ const UserSchema = new mongoose.Schema(
 		versionKey: false,
 	}
 )
+
+UserSchema.pre('save', function (next) {
+	this.password = bcrypt.hashSync(this.password, 10)
+	next()
+})
+
+UserSchema.methods.createJWT = function () {
+	return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+		expiresIn: process.env.JWT_LIFETIME,
+	})
+}
+
+UserSchema.methods.comparePassword = function (password) {
+	return bcrypt.compareSync(password, this.password)
+}
 
 module.exports = mongoose.model('User', UserSchema)

@@ -3,6 +3,7 @@ require('express-async-errors')
 
 const express = require('express')
 const cors = require('cors')
+const auth = require('./routes/auth')
 const forums = require('./routes/forums')
 const posts = require('./routes/posts')
 const threads = require('./routes/threads')
@@ -18,6 +19,7 @@ const port = 5000
 app.use(express.json())
 app.use(cors())
 
+app.use('/api/v1/auth', auth)
 app.use('/api/v1/forums', forums)
 app.use('/api/v1/posts', posts)
 app.use('/api/v1/threads', threads)
