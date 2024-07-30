@@ -18,22 +18,11 @@ const UserSchema = new mongoose.Schema(
 			required: [true, 'Email is required'],
 			trim: true,
 		},
-		lastVisitAt: {
-			type: Date,
-			default: Date.now,
-		},
 		name: {
 			type: String,
 			maxlength: [30, 'Name can not be more than 20 characters'],
 			required: [true, 'Name is required'],
 			trim: true,
-		},
-		isModerator: {
-			type: Boolean,
-		},
-		registeredAt: {
-			type: Date,
-			default: Date.now,
 		},
 		username: {
 			type: String,
@@ -46,12 +35,29 @@ const UserSchema = new mongoose.Schema(
 			maxlength: [30, 'Username Lower can not be more than 20 characters'],
 			trim: true,
 		},
+		isModerator: {
+			type: Boolean,
+		},
+		registeredAt: {
+			type: Date,
+			default: Date.now,
+		},
+		lastVisitAt: {
+			type: Date,
+			default: Date.now,
+		},
 		postsCount: {
 			type: Number,
 			default: 0,
 		},
 		threads: {
 			type: [mongoose.Types.ObjectId],
+		},
+		password: {
+			type: String,
+			required: [true, 'Password is required'],
+			mixLength: [6, 'Password should be at least 6 characters'],
+			trim: true,
 		},
 	},
 	{

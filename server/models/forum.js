@@ -25,10 +25,13 @@ const ForumSchema = new mongoose.Schema(
 		threads: {
 			type: [mongoose.Types.ObjectId],
 		},
+		createdBy: {
+			type: mongoose.Types.ObjectId,
+			ref: 'User',
+			required: [true, 'Please provide userId'],
+		},
 	},
-	{
-		versionKey: false,
-	}
+	{ timestamps: true }
 )
 
 module.exports = mongoose.model('Forum', ForumSchema)

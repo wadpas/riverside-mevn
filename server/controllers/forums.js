@@ -1,39 +1,56 @@
 const Forum = require('../models/forum')
+const { StatusCodes } = require('http-status-codes')
+const { BadRequestError, NotFoundError } = require('../errors')
 
 const getForums = async (req, res) => {
-	const forums = await Forum.find({})
-	res.status(200).json({ forums })
-}
-
-const createForum = async (req, res) => {
-	const forum = await Forum.create(req.body)
-	res.status(201).json({ forum })
+	const forums = await Forum.find({}).sort('createdAt')
+	res.status(StatusCodes.OK).json({ forums, count: forums.length })
 }
 
 const getForum = async (req, res) => {
-	const { id } = req.params
-	const forum = await Forum.findById({ _id: id })
+	const { id: forumId } = req.params
+	const forum = await Forum.findById({ _id: forumId })
 	if (!forum) {
-		return res.status(404).json(`Forum ${id} not found`)
+		throw new NotFoundError(`No forum with id ${forumId}`)
 	}
-	res.status(200).json({ forum })
-}
-const updateForum = async (req, res) => {
-	const { id } = req.params
-	const forum = await Forum.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
-	if (!forum) {
-		return res.status(404).json(`Forum ${forumId} not found`)
-	}
-	res.status(200).json({ forum })
+	res.status(StatusCodes.OK).json({ forum })
 }
 
-const deleteForum = async (req, res, next) => {
-	const { id } = req.params
-	const forum = await Forum.findOneAndDelete({ _id: id })
-	if (!forum) {
-		return next(customError(`No forum with id : ${id}`, 404))
+const createForum = async (req, res) => {
+	req.body.createdBy = req.user.userId
+	const forum = await Forum.create(req.body)
+	res.status(StatusCodes.CREATED).json({ forum })
+}
+
+const updateForum = async (req, res) => {
+	const {
+		body: { description, name },
+		params: { id: forumId },
+		user: { userId },
+	} = req
+	if (description === '' || name === '') {
+		throw new BadRequestError('Description and name fields cannot be empty')
 	}
-	res.status(200).json({ forum })
+	const forum = await Forum.findOneAndUpdate({ _id: forumId, createdBy: userId }, req.body, {
+		new: true,
+		runValidation: true,
+	})
+	if (!forum) {
+		throw new NotFoundError(`No forum with id ${forumId}`)
+	}
+	res.status(StatusCodes.OK).json({ forum })
+}
+
+const deleteForum = async (req, res) => {
+	const {
+		user: { userId },
+		params: { id: jobId },
+	} = req
+	const forum = await Forum.findOneAndDelete({ _id: jobId, createdBy: userId })
+	if (!forum) {
+		throw new NotFoundError(`No forum with id ${jobId}`)
+	}
+	res.status(StatusCodes.OK).send()
 }
 module.exports = {
 	getForums,
