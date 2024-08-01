@@ -1,40 +1,56 @@
 const Category = require('../models/category')
+const { StatusCodes } = require('http-status-codes')
+const { BadRequestError, NotFoundError } = require('../errors')
 
 const getCategories = async (req, res) => {
-	const categories = await Category.find({})
-	res.status(200).json({ categories })
-}
-
-const createCategory = async (req, res) => {
-	const category = await Category.create(req.body)
-	res.status(201).json({ category })
+	const categories = await Category.find({}).sort('createdAt')
+	res.status(StatusCodes.OK).json({ categories, count: categories.length })
 }
 
 const getCategory = async (req, res) => {
-	const { id } = req.params
-	const category = await Category.findById({ _id: id })
+	const { id: categoryId } = req.params
+	const category = await Category.findById({ _id: categoryId })
 	if (!category) {
-		return res.status(404).json(`Category ${id} not found`)
+		throw new NotFoundError(`No forum with id ${categoryId}`)
 	}
-	res.status(200).json({ category })
+	res.status(StatusCodes.OK).json({ category })
+}
+
+const createCategory = async (req, res) => {
+	req.body.createdBy = req.user.userId
+	const category = await Category.create(req.body)
+	res.status(StatusCodes.CREATED).json({ category })
 }
 
 const updateCategory = async (req, res) => {
-	const { id } = req.params
-	const category = await Category.findOneAndUpdate({ _id: id }, req.body, { new: true, runValidation: true })
-	if (!category) {
-		return res.status(404).json(`Category ${categoryId} not found`)
+	const {
+		body: { name },
+		params: { id: categoryId },
+		user: { userId },
+	} = req
+	if (name === '') {
+		throw new BadRequestError('Name field cannot be empty')
 	}
-	res.status(200).json({ category })
+	const category = await Category.findOneAndUpdate({ _id: categoryId, createdBy: userId }, req.body, {
+		new: true,
+		runValidation: true,
+	})
+	if (!category) {
+		throw new NotFoundError(`No category with id ${categoryId}`)
+	}
+	res.status(StatusCodes.OK).json({ category })
 }
 
 const deleteCategory = async (req, res, next) => {
-	const { id } = req.params
-	const category = await Category.findOneAndDelete({ _id: id })
+	const {
+		user: { userId },
+		params: { id: categoryId },
+	} = req
+	const category = await Category.findOneAndDelete({ _id: categoryId, createdBy: userId })
 	if (!category) {
-		return next(customError(`No category with id : ${id}`, 404))
+		throw new NotFoundError(`No category with id ${categoryId}`)
 	}
-	res.status(200).json({ category })
+	res.status(StatusCodes.OK).send()
 }
 
 module.exports = {

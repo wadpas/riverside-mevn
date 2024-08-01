@@ -56,7 +56,7 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			this.thread.posts = []
 			this.thread.publishedAt = Date.now().toString()
 			this.thread.slug = this.thread.title.toLowerCase().replace(/ /g, '-')
-			this.thread.userId = this.usersStore.authUser._id
+			// this.thread.userId = this.usersStore.authUser._id
 			this.thread.forumId = this.forumsStore.forum._id
 
 			const resThread = await axios.post('/threads', this.thread)

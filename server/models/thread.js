@@ -41,9 +41,7 @@ const ThreadSchema = new mongoose.Schema(
 			required: true,
 		},
 	},
-	{
-		versionKey: false,
-	}
+	{ timestamps: true }
 )
 
 module.exports = mongoose.model('Thread', ThreadSchema)

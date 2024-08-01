@@ -1,51 +1,57 @@
 const User = require('../models/user')
-const { customError } = require('../errors/custom-error')
+const { StatusCodes } = require('http-status-codes')
+const { BadRequestError, NotFoundError } = require('../errors')
 
 const getUsers = async (req, res) => {
-	const users = await User.find({ _id: { $in: req.query.usersIds } })
-	res.status(200).json({ users })
+	const { usersIds } = req.query
+	console.log(usersIds)
+	const users = await User.find({ _id: { $in: usersIds } })
+	res.status(StatusCodes.OK).json({ users, count: users.length })
 }
 
-const createUser = async (req, res) => {
-	const user = await User.create(req.body)
-	res.status(201).json({ user })
-}
-
-const getUser = async (req, res, next) => {
-	const { id } = req.params
-	const user = await User.findById({ _id: id })
+const getUser = async (req, res) => {
+	const { id: userId } = req.params
+	const user = await User.findById({ _id: userId })
 	if (!user) {
-		return next(customError(`No user with id : ${id}`, 404))
+		throw new NotFoundError(`No user with id ${userId}`)
 	}
-	res.status(200).json({ user })
+	res.status(StatusCodes.OK).json({ user })
 }
 
-const updateUser = async (req, res, next) => {
-	const { id } = req.params
-	const user = await User.findOneAndUpdate({ _id: id }, { $inc: { postsCount: 1 } }, { new: true, runValidation: true })
-	if (!user) {
-		return next(customError(`No user with id : ${id}`, 404))
+const updateUser = async (req, res) => {
+	const {
+		body: { email, name, username },
+		user: { userId },
+	} = req
+	if (email === '' || name === '' || username === '') {
+		throw new BadRequestError('Email, name, and username fields cannot be empty')
 	}
-	res.status(200).json({ user })
+	const user = await User.findOneAndUpdate(
+		{ _id: userId },
+		{ $inc: { postsCount: 1 }, ...req.body },
+		{ new: true, runValidation: true }
+	)
+	if (!user) {
+		throw new NotFoundError(`No user with id ${threadId}`)
+	}
+	res.status(StatusCodes.OK).json({ user })
 }
 
-const deleteUser = async (req, res, next) => {
-	const { id } = req.params
-	const user = await User.findOneAndDelete({ _id: id })
+const deleteUser = async (req, res) => {
+	const { userId } = req.user
+	const user = await User.findOneAndDelete({ _id: userId })
 	if (!user) {
-		return next(customError(`No user with id : ${id}`, 404))
+		throw new NotFoundError(`No user with id ${userId}`)
 	}
-	res.status(200).json({ user })
+	res.status(StatusCodes.OK).send()
 }
 
 module.exports = {
 	getUsers,
-	createUser,
 	getUser,
 	updateUser,
 	deleteUser,
 }
-
 // await User.insertMany(
 // 	users.map((user) => ({
 // 		avatar: user.avatar,

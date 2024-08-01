@@ -44,14 +44,15 @@ const updateForum = async (req, res) => {
 const deleteForum = async (req, res) => {
 	const {
 		user: { userId },
-		params: { id: jobId },
+		params: { id: forumId },
 	} = req
-	const forum = await Forum.findOneAndDelete({ _id: jobId, createdBy: userId })
+	const forum = await Forum.findOneAndDelete({ _id: forumId, createdBy: userId })
 	if (!forum) {
-		throw new NotFoundError(`No forum with id ${jobId}`)
+		throw new NotFoundError(`No forum with id ${forumId}`)
 	}
 	res.status(StatusCodes.OK).send()
 }
+
 module.exports = {
 	getForums,
 	createForum,
