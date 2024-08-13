@@ -1,0 +1,101 @@
+<template>
+	<div class="flex-grid justify-center">
+		<div class="col-2">
+			<form
+				@submit.prevent="register"
+				action=""
+				class="card card-form">
+				<h1 class="text-center">Register</h1>
+
+				<div class="form-group">
+					<label for="name">Full Name</label>
+					<input
+						id="name"
+						v-model="user.name"
+						type="text"
+						class="form-input" />
+				</div>
+
+				<div class="form-group">
+					<label for="username">Username</label>
+					<input
+						id="username"
+						v-model="user.username"
+						type="text"
+						class="form-input" />
+				</div>
+
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input
+						id="email"
+						v-model="user.email"
+						type="email"
+						class="form-input" />
+				</div>
+
+				<div class="form-group">
+					<label for="password">Password</label>
+					<input
+						id="password"
+						v-model="user.password"
+						type="password"
+						class="form-input" />
+				</div>
+
+				<div class="form-group">
+					<label for="avatar">Avatar</label>
+					<input
+						id="avatar"
+						v-model="user.avatar"
+						type="text"
+						class="form-input" />
+				</div>
+
+				<div class="form-actions">
+					<button
+						type="submit"
+						class="btn-blue btn-block">
+						Register
+					</button>
+				</div>
+			</form>
+			<div class="text-center push-top">
+				<button class="btn-red btn-xsmall">
+					<i class="fa fa-google fa-btn"></i>
+					Sign up with Google
+				</button>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup>
+	import { useUsersStore } from '../stores/UsersStore'
+	import { useRoute, useRouter } from 'vue-router'
+
+	const usersStore = useUsersStore()
+	const emit = defineEmits(['savePost'])
+	const router = useRouter()
+
+	let user = {
+		name: '',
+		username: '',
+		email: '',
+		password: '',
+		avatar: '',
+	}
+
+	async function register() {
+		try {
+			await usersStore.loginUser(credentials)
+			router.push({ name: 'HomeView' })
+		} catch (error) {
+			alert(error.message)
+		}
+		await usersStore.createUser(user)
+		router.push({ name: 'HomeView' })
+	}
+
+	// onMounted(emit('ready'))
+</script>

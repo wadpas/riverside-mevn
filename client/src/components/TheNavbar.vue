@@ -7,7 +7,7 @@
 				<img src="../assets/neos_logo.svg" />
 			</router-link>
 		</div>
-
+		{{ userDropdownOpen }}
 		<div class="btn-hamburger">
 			<!-- use .btn-humburger-active to open the menu -->
 			<div class="top bar"></div>
@@ -17,8 +17,11 @@
 		<!-- use .navbar-open to open nav -->
 		<nav class="navbar">
 			<ul>
-				<li class="navbar-user">
-					<router-link
+				<li
+					v-if="authUserExist"
+					class="navbar-user">
+					<a
+						@click.prevent="userDropdownOpen = !userDropdownOpen"
 						:to="{ name: 'ProfileView' }"
 						href="#">
 						<img
@@ -32,17 +35,32 @@
 								src="../assets/arrow-profile.svg"
 								alt="" />
 						</span>
-					</router-link>
+					</a>
 
 					<!-- dropdown menu -->
 					<!-- add class "active-drop" to show the dropdown -->
-					<div id="user-dropdown">
+					<div
+						@click.prevent="userDropdownOpen = !userDropdownOpen"
+						id="user-dropdown"
+						:class="{ 'active-drop': userDropdownOpen }">
 						<div class="triangle-drop"></div>
 						<ul class="dropdown-menu">
-							<li class="dropdown-menu-item"><a href="profile.html">View profile</a></li>
-							<li class="dropdown-menu-item"><a href="#">Log out</a></li>
+							<li class="dropdown-menu-item"><router-link :to="{ name: 'ProfileView' }">View profile</router-link></li>
+							<li class="dropdown-menu-item">
+								<a @click.prevent="usersStore.signOut">Sign out</a>
+							</li>
 						</ul>
 					</div>
+				</li>
+				<li
+					v-if="!authUserExist"
+					class="navbar-item">
+					<router-link :to="{ name: 'SingInView' }">Sign In</router-link>
+				</li>
+				<li
+					v-if="!authUserExist"
+					class="navbar-item">
+					<router-link :to="{ name: 'RegisterView' }">Register</router-link>
 				</li>
 			</ul>
 
@@ -71,9 +89,12 @@
 </template>
 
 <script setup>
+	import { ref } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
 
 	const usersStore = useUsersStore()
-	const { authUser } = storeToRefs(usersStore)
+	const { authUser, authUserExist } = storeToRefs(usersStore)
+
+	let userDropdownOpen = ref(false)
 </script>

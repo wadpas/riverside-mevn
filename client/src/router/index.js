@@ -5,8 +5,10 @@ import ThreadCreditView from '../views/ThreadCreditView.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
-import axios from 'axios'
+import RegisterView from '../views/RegisterView.vue'
+import SingInView from '../views/SingInView.vue'
 import { useForumsStore } from '../stores/ForumsStore'
+import { useUsersStore } from '../stores/UsersStore'
 
 const routes = [
 	{
@@ -18,7 +20,15 @@ const routes = [
 		path: '/me',
 		name: 'ProfileView',
 		component: ProfileView,
-		meta: { toTop: true, smoothScroll: true },
+		beforeEnter(to, from, next) {
+			if (!localStorage.getItem('token')) {
+				next({
+					name: 'HomeView',
+				})
+			} else {
+				next()
+			}
+		},
 	},
 	{
 		path: '/me/edit',
@@ -38,7 +48,6 @@ const routes = [
 		component: ThreadView,
 		props: true,
 	},
-
 	{
 		path: '/forums/threads/sample',
 		name: 'ThreadCreditView',
@@ -53,6 +62,16 @@ const routes = [
 				next()
 			}
 		},
+	},
+	{
+		path: '/register',
+		name: 'RegisterView',
+		component: RegisterView,
+	},
+	{
+		path: '/signin',
+		name: 'SingInView',
+		component: SingInView,
 	},
 	{
 		path: '/:pathMatch(.*)*',

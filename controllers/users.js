@@ -4,13 +4,16 @@ const { BadRequestError, NotFoundError } = require('../errors')
 
 const getUsers = async (req, res) => {
 	const { usersIds } = req.query
-	console.log(usersIds)
 	const users = await User.find({ _id: { $in: usersIds } })
 	res.status(StatusCodes.OK).json({ users, count: users.length })
 }
 
 const getUser = async (req, res) => {
-	const { id: userId } = req.params
+	const {
+		user: { userId },
+	} = req
+	console.log(userId)
+
 	const user = await User.findById({ _id: userId })
 	if (!user) {
 		throw new NotFoundError(`No user with id ${userId}`)
@@ -23,14 +26,13 @@ const updateUser = async (req, res) => {
 		body: { email, name, username },
 		user: { userId },
 	} = req
+
+	console.log(userId)
+
 	if (email === '' || name === '' || username === '') {
 		throw new BadRequestError('Email, name, and username fields cannot be empty')
 	}
-	const user = await User.findOneAndUpdate(
-		{ _id: userId },
-		{ $inc: { postsCount: 1 }, ...req.body },
-		{ new: true, runValidation: true }
-	)
+	const user = await User.findOneAndUpdate({ _id: userId }, { ...req.body }, { new: true, runValidation: true })
 	if (!user) {
 		throw new NotFoundError(`No user with id ${threadId}`)
 	}

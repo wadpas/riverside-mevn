@@ -14,6 +14,9 @@ export const useForumsStore = defineStore('ForumsStore', {
 		forumById(state) {
 			return (id) => findById(state.forums, id)
 		},
+		forumExist(state) {
+			return Object.keys(this.forum).length > 0
+		},
 	},
 	actions: {
 		async fetchForums() {

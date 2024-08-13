@@ -23,15 +23,16 @@ const createThread = async (req, res) => {
 }
 
 const updateThread = async (req, res) => {
+	console.log(req.params)
+
 	const {
 		body: { title },
 		params: { id: threadId },
-		user: { userId },
 	} = req
 	if (title === '') {
 		throw new BadRequestError('Title field cannot be empty')
 	}
-	const thread = await Thread.findOneAndUpdate({ _id: threadId, userId }, req.body, {
+	const thread = await Thread.findOneAndUpdate({ _id: threadId }, req.body, {
 		new: true,
 		runValidation: true,
 	})

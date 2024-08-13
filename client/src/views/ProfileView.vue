@@ -22,7 +22,8 @@
 				</div>
 
 				<hr />
-
+				{{ users }}
+				{{ getUserPosts(authUser._id) }}
 				<PostList :posts="posts" />
 			</div>
 		</div>
@@ -44,16 +45,16 @@
 	const postsStore = usePostsStore()
 
 	const { threads } = storeToRefs(threadsStore)
-	const { posts } = storeToRefs(postsStore)
-	const { authUser, activeUser } = storeToRefs(usersStore)
+	const { posts, getUserPosts } = storeToRefs(postsStore)
+	const { users, authUser, activeUser } = storeToRefs(usersStore)
 
 	const props = defineProps({
 		edit: false,
 	})
 
 	onBeforeMount(async () => {
-		const user = await usersStore.fetchAuthUser('61687a737371396b62797031')
-		postsStore.fetchPosts({ userId: user._id })
-		threadsStore.fetchThreads({ userId: user._id })
+		const user = await usersStore.fetchUser()
+		await postsStore.fetchPosts({ userId: user._id })
+		await threadsStore.fetchThreads({ userId: user._id })
 	})
 </script>

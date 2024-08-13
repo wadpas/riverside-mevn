@@ -1,6 +1,5 @@
 <template>
 	<h1>Welcome to the Forum</h1>
-
 	<div
 		class="forum-list"
 		v-for="category in categories">
@@ -18,11 +17,14 @@
 	import { storeToRefs } from 'pinia'
 	import { useCategoriesStore } from '../stores/CategoriesStore'
 	import { useForumsStore } from '../stores/ForumsStore'
+	import { useUsersStore } from '../stores/UsersStore'
 
 	const categoriesStore = useCategoriesStore()
 	const forumsStore = useForumsStore()
+	const usersStore = useUsersStore()
 	const { categories } = storeToRefs(categoriesStore)
 	const { forumsByIds } = storeToRefs(forumsStore)
+	const { authUser, authUserExist } = storeToRefs(usersStore)
 
 	onBeforeMount(async () => {
 		await forumsStore.fetchForums()

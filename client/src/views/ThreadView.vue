@@ -3,7 +3,7 @@
 		{{ thread?.title }}
 		<router-link
 			:to="{ name: 'ThreadCreditView' }"
-			v-if="thread?.userId === authUser._id">
+			v-if="thread?.userId === authUser._id && authUser._id">
 			<fa icon="pencil-alt" />
 		</router-link>
 	</h1>

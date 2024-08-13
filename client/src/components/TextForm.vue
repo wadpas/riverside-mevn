@@ -56,7 +56,8 @@
 				break
 			case editTread:
 				console.log('editTread')
-				await threadsStore.updateThread({ thread: formThread.value, post: formPost.value })
+				await threadsStore.updateThread({ thread: formThread.value })
+				await postsStore.updatePost({ post: formPost.value })
 				router.push({ name: 'ThreadView', params: { id: props.thread._id } })
 				break
 			case newPost:

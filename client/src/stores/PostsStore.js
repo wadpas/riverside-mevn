@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { findById, upsert } from '../helpers'
 import { useUsersStore } from '../stores/UsersStore'
 import { useThreadsStore } from '../stores/ThreadsStore'
 import { useForumsStore } from '../stores/ForumsStore'
@@ -28,23 +29,25 @@ export const usePostsStore = defineStore('PostsStore', {
 		async createPost(post) {
 			post.userId = this.usersStore.authUser._id
 			post.threadId = post.threadId || this.threadsStore.thread._id
+			const token = localStorage.getItem('token')
+			if (!token) return
 			try {
 				const resPost = await axios.post('/posts', post)
-				const dbPost = resPost.data.post
-				this.posts.push(dbPost)
-				this.threadsStore.appendToThread(this.threadsStore.thread._id, dbPost._id, post.userId)
-				this.usersStore.appendPostToUser(post.userId)
-				return dbPost
+				this.post = resPost.data.post
+				this.posts.push(this.post)
+				this.threadsStore.appendToThread(post.threadId, this.post._id)
+				this.usersStore.appendPostToUser()
+				return this.post
 			} catch (error) {
-				console.log(error.response.data.msg)
+				console.log(error)
 			}
 		},
 
 		async updatePost(newPost) {
+			console.log(newPost)
 			if (newPost) this.post = newPost
 			await axios.patch(`/posts/${this.post._id}`, this.post)
-			const index = this.posts.findIndex((item) => item._id === this.post._id)
-			this.posts[index] = this.post
+			upsert(this.posts, this.post)
 		},
 	},
 })

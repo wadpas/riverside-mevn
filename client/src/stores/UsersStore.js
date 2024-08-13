@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '../axios'
 import { defineStore } from 'pinia'
 import { findById, upsert } from '../helpers'
 
@@ -12,13 +12,18 @@ export const useUsersStore = defineStore('UsersStore', {
 		userById(state) {
 			return (id) => findById(state.users, id)
 		},
+		authUserExist() {
+			return Object.keys(this.authUser).length > 0
+		},
 	},
+
 	actions: {
-		async fetchAuthUser(id) {
-			await axios.get(`/users/${id}`).then((res) => {
-				this.authUser = res.data.user
-				upsert(this.users, this.authUser)
-			})
+		async fetchUser() {
+			const token = localStorage.getItem('token')
+			if (!token) return
+			const resUser = await axios.get(`/users/me`)
+			this.authUser = resUser.data.user
+			upsert(this.users, this.authUser)
 			return this.authUser
 		},
 
@@ -36,11 +41,39 @@ export const useUsersStore = defineStore('UsersStore', {
 			await axios.patch(`/users/${userId}`, { threads: user.threads })
 		},
 
-		async appendPostToUser(userId) {
-			const user = this.userById(userId)
-			if (!user) return
-			user.postsCount += 1
-			await axios.patch(`/users/${userId}`, { postsCount: user.postsCount })
+		async appendPostToUser() {
+			const token = localStorage.getItem('token')
+			if (!token) return
+			await axios.patch(`/users/me`, { postsCount: this.authUser.postsCount + 1 })
+		},
+
+		async createUser(user) {
+			user.usernameLower = user.username.toLowerCase()
+			user.email = user.email.toLowerCase()
+			try {
+				const resUser = await axios.post('/auth/register', user)
+				const dbUser = resUser.data.user
+				this.authUser = dbUser
+				upsert(this.users, dbUser)
+			} catch (error) {
+				console.log(error)
+			}
+		},
+
+		async loginUser(credentials) {
+			try {
+				const resUser = await axios.post('/auth/login', credentials)
+				this.authUser = resUser.data.user
+				upsert(this.users, this.authUser)
+				localStorage.setItem('token', resUser.data.token)
+			} catch (error) {
+				console.log(error)
+			}
+		},
+
+		async signOut() {
+			this.authUser = {}
+			localStorage.removeItem('token')
 		},
 
 		async updateUser() {
@@ -51,3 +84,4 @@ export const useUsersStore = defineStore('UsersStore', {
 		},
 	},
 })
+//

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { findById } from '../helpers'
+import { findById, upsert } from '../helpers'
 import { useUsersStore } from '../stores/UsersStore'
 import { usePostsStore } from '../stores/PostsStore'
 import { useForumsStore } from '../stores/ForumsStore'
@@ -33,17 +33,18 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			})
 		},
 
-		async appendToThread(threadId, postId, userId) {
-			const thread = this.threadById(threadId)
-			if (!thread) return
-			thread.posts.push(postId)
+		async appendToThread(threadId, postId) {
+			console.log(threadId)
+
+			this.thread.posts.push(postId)
+
 			await axios.patch('/threads/' + threadId, {
-				posts: thread.posts,
+				posts: this.thread.posts,
 			})
-			if (this.thread.contributors.includes(userId)) return
-			thread.contributors.push(userId)
+			if (this.thread.contributors.includes(this.usersStore.authUser._id)) return
+			this.thread.contributors.push(this.usersStore.authUser._id)
 			await axios.patch('/threads/' + threadId, {
-				contributors: thread.contributors,
+				contributors: this.thread.contributors,
 			})
 		},
 
@@ -56,31 +57,21 @@ export const useThreadsStore = defineStore('ThreadsStore', {
 			this.thread.posts = []
 			this.thread.publishedAt = Date.now().toString()
 			this.thread.slug = this.thread.title.toLowerCase().replace(/ /g, '-')
-			// this.thread.userId = this.usersStore.authUser._id
 			this.thread.forumId = this.forumsStore.forum._id
 
 			const resThread = await axios.post('/threads', this.thread)
-			const dbThread = resThread.data.thread
-			this.threads.push(dbThread)
-			post.threadId = dbThread._id
-			console.log(dbThread)
+			this.thread = resThread.data.thread
+			this.threads.push(this.thread)
 
-			const createdPost = await this.postsStore.createPost(post)
-
-			this.appendToThread(dbThread._id, createdPost._id, this.usersStore.authUser._id)
-			this.forumsStore.appendThreadToForum(dbThread._id, dbThread.forumId)
-			this.usersStore.appendThreadToUser(dbThread._id, this.usersStore.authUser._id)
-
-			return dbThread
+			post.threadId = this.thread._id
+			await this.postsStore.createPost(post)
+			return this.thread
 		},
 
-		async updateThread({ thread, post }) {
-			this.thread = thread
+		async updateThread({ thread }) {
+			if (thread) this.thread = thread
 			await axios.patch('/threads/' + this.thread._id, thread)
-			const index = this.threads.findIndex((item) => item._id === this.thread._id)
-			this.threads[index] = this.thread
-
-			await this.postsStore.updatePost(post)
+			upsert(this.threads, this.thread)
 		},
 	},
 })
