@@ -59,6 +59,10 @@
 						Register
 					</button>
 				</div>
+
+				<div class="form-actions text-right">
+					<router-link :to="{ name: 'SingInView' }">Enter to account</router-link>
+				</div>
 			</form>
 			<div class="text-center push-top">
 				<button class="btn-red btn-xsmall">

@@ -16,12 +16,11 @@
 		<span class="online">{{ user?.name }} is online</span>
 
 		<div class="stats">
-			<span>{{ user.postsCount }} posts</span>
+			<span>{{ user?.postsCount }} posts</span>
 			<span>{{ threads?.length }} threads</span>
 		</div>
 
 		<hr />
-
 		<p
 			v-if="user?.website"
 			class="text-large text-center">
@@ -46,7 +45,6 @@
 <script setup>
 	const props = defineProps({
 		user: Object,
-		posts: Array,
 		threads: Array,
 	})
 </script>

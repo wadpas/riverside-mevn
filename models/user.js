@@ -65,9 +65,10 @@ const UserSchema = new mongoose.Schema(
 	}
 )
 
-UserSchema.pre('save', function (next) {
-	this.password = bcrypt.hashSync(this.password, 10)
-	next()
+UserSchema.pre('save', async function () {
+	if (!this.isModified('password')) return
+	const salt = await bcrypt.genSalt(10)
+	this.password = bcrypt.hashSync(this.password, salt)
 })
 
 UserSchema.methods.createJWT = function () {

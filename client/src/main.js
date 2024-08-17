@@ -6,7 +6,15 @@ import router from './router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import ClickOutsideDirective from './plugins/ClickOutsideDirective'
+import PageScrollDirective from './plugins/PageScrollDirective'
 
 library.add(faPencilAlt)
 
-createApp(App).use(router).use(createPinia()).component('fa', FontAwesomeIcon).mount('#app')
+createApp(App)
+	.use(ClickOutsideDirective)
+	.use(PageScrollDirective)
+	.use(router)
+	.use(createPinia())
+	.component('fa', FontAwesomeIcon)
+	.mount('#app')

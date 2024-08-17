@@ -60,11 +60,11 @@
 	}
 
 	async function signIn() {
-		try {
-			await usersStore.loginUser(credentials)
+		const user = await usersStore.loginUser(credentials)
+		if (user) {
 			router.push({ name: 'HomeView' })
-		} catch (error) {
-			alert(error.message)
+		} else {
+			alert('Invalid credential')
 		}
 	}
 

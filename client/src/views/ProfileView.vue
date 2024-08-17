@@ -5,13 +5,11 @@
 				<ProfileCard
 					v-if="!edit"
 					:user="authUser"
-					:posts="posts"
 					:threads="threads" />
 
 				<ProfileCardEditor
 					v-else
 					:activeUser="activeUser"
-					:posts="posts"
 					:threads="threads" />
 			</div>
 
@@ -22,9 +20,9 @@
 				</div>
 
 				<hr />
-				{{ users }}
-				{{ getUserPosts(authUser._id) }}
-				<PostList :posts="posts" />
+				<PostList
+					:posts="posts"
+					v-if="authUser" />
 			</div>
 		</div>
 	</div>
@@ -45,8 +43,8 @@
 	const postsStore = usePostsStore()
 
 	const { threads } = storeToRefs(threadsStore)
-	const { posts, getUserPosts } = storeToRefs(postsStore)
-	const { users, authUser, activeUser } = storeToRefs(usersStore)
+	const { posts } = storeToRefs(postsStore)
+	const { authUser, activeUser } = storeToRefs(usersStore)
 
 	const props = defineProps({
 		edit: false,

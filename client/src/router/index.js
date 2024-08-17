@@ -20,15 +20,7 @@ const routes = [
 		path: '/me',
 		name: 'ProfileView',
 		component: ProfileView,
-		beforeEnter(to, from, next) {
-			if (!localStorage.getItem('token')) {
-				next({
-					name: 'HomeView',
-				})
-			} else {
-				next()
-			}
-		},
+		meta: { toTop: true, smoothScroll: true, requestAuth: true },
 	},
 	{
 		path: '/me/edit',
@@ -52,6 +44,7 @@ const routes = [
 		path: '/forums/threads/sample',
 		name: 'ThreadCreditView',
 		component: ThreadCreditView,
+		meta: { requestAuth: true },
 		props: true,
 		beforeEnter(to, from, next) {
 			if (Object.keys(useForumsStore().forum).length === 0) {
@@ -67,11 +60,21 @@ const routes = [
 		path: '/register',
 		name: 'RegisterView',
 		component: RegisterView,
+		meta: { requiresGest: true },
 	},
 	{
 		path: '/signin',
 		name: 'SingInView',
 		component: SingInView,
+		meta: { requiresGest: true },
+	},
+	{
+		path: '/logout',
+		name: 'SignOut',
+		async beforeEnter(to, from) {
+			await useUsersStore().signOut()
+			return { name: 'HomeView' }
+		},
 	},
 	{
 		path: '/:pathMatch(.*)*',
@@ -89,6 +92,15 @@ const router = createRouter({
 		if (to.meta?.smoothScroll) scroll.behavior = 'smooth'
 		return scroll
 	},
+})
+
+router.beforeEach((to, from) => {
+	if (to.meta.requestAuth && !localStorage.getItem('token')) {
+		return { name: 'SingInView' }
+	}
+	if (to.meta.requiresGest && localStorage.getItem('token')) {
+		return { name: 'HomeView' }
+	}
 })
 
 export default router

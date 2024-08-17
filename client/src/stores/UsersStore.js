@@ -5,15 +5,12 @@ import { findById, upsert } from '../helpers'
 export const useUsersStore = defineStore('UsersStore', {
 	state: () => ({
 		users: [],
-		authUser: {},
-		activeUser: {},
+		authUser: null,
+		activeUser: null,
 	}),
 	getters: {
 		userById(state) {
 			return (id) => findById(state.users, id)
-		},
-		authUserExist() {
-			return Object.keys(this.authUser).length > 0
 		},
 	},
 
@@ -23,6 +20,7 @@ export const useUsersStore = defineStore('UsersStore', {
 			if (!token) return
 			const resUser = await axios.get(`/users/me`)
 			this.authUser = resUser.data.user
+			this.activeUser = resUser.data.user
 			upsert(this.users, this.authUser)
 			return this.authUser
 		},
@@ -64,15 +62,17 @@ export const useUsersStore = defineStore('UsersStore', {
 			try {
 				const resUser = await axios.post('/auth/login', credentials)
 				this.authUser = resUser.data.user
+				this.activeUser = resUser.data.user
 				upsert(this.users, this.authUser)
 				localStorage.setItem('token', resUser.data.token)
+				return this.authUser
 			} catch (error) {
 				console.log(error)
 			}
 		},
 
 		async signOut() {
-			this.authUser = {}
+			this.authUser = null
 			localStorage.removeItem('token')
 		},
 

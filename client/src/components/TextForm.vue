@@ -18,6 +18,11 @@
 				placeholder="Post"></textarea>
 		</div>
 		<div class="form-actions">
+			<button
+				class="btn-green"
+				@click.prevent="router.go(-1)">
+				Cancel
+			</button>
 			<button class="btn-blue">Submit</button>
 		</div>
 	</form>
@@ -30,6 +35,7 @@
 	const router = useRouter()
 	import { usePostsStore } from '../stores/PostsStore'
 	import { useThreadsStore } from '../stores/ThreadsStore'
+	import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 	const postsStore = usePostsStore()
 	const threadsStore = useThreadsStore()
 
@@ -69,4 +75,9 @@
 				break
 		}
 	}
+
+	onBeforeRouteLeave((to, from) => {
+		const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+		if (!answer) return false
+	})
 </script>

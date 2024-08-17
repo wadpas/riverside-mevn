@@ -24,7 +24,7 @@
 	const usersStore = useUsersStore()
 	const { categories } = storeToRefs(categoriesStore)
 	const { forumsByIds } = storeToRefs(forumsStore)
-	const { authUser, authUserExist } = storeToRefs(usersStore)
+	const { authUser } = storeToRefs(usersStore)
 
 	onBeforeMount(async () => {
 		await forumsStore.fetchForums()
