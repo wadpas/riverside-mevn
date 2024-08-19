@@ -44,12 +44,21 @@
 				</div>
 
 				<div class="form-group">
-					<label for="avatar">Avatar</label>
+					<label for="avatar">
+						Avatar
+						<div v-if="avatarPreview">
+							<img
+								:src="avatarPreview"
+								class="avatar-xlarge" />
+						</div>
+					</label>
 					<input
+						v-show="!avatarPreview"
 						id="avatar"
-						v-model="user.avatar"
-						type="text"
-						class="form-input" />
+						type="file"
+						class="form-input"
+						@change="handleImageUpload"
+						accept="image/*" />
 				</div>
 
 				<div class="form-actions">
@@ -75,13 +84,15 @@
 </template>
 
 <script setup>
+	import { ref } from 'vue'
 	import { useUsersStore } from '../stores/UsersStore'
 	import { useRoute, useRouter } from 'vue-router'
 
 	const usersStore = useUsersStore()
-	const emit = defineEmits(['savePost'])
+	const emit = defineEmits([''])
 	const router = useRouter()
 
+	let avatarPreview = ref(null)
 	let user = {
 		name: '',
 		username: '',
@@ -92,14 +103,20 @@
 
 	async function register() {
 		try {
-			await usersStore.loginUser(credentials)
+			await usersStore.createUser(user)
 			router.push({ name: 'HomeView' })
 		} catch (error) {
 			alert(error.message)
 		}
-		await usersStore.createUser(user)
-		router.push({ name: 'HomeView' })
 	}
 
-	// onMounted(emit('ready'))
+	function handleImageUpload(e) {
+		user.avatar = e.target.files[0]
+		const reader = new FileReader()
+		reader.onload = (event) => {
+			avatarPreview.value = event.target.result
+		}
+		reader.readAsDataURL(user.avatar)
+		console.log(user.avatar)
+	}
 </script>

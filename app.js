@@ -5,6 +5,7 @@ const path = require('path')
 const helmet = require('helmet')
 const cors = require('cors')
 const express = require('express')
+const fileUpload = require('express-fileupload')
 
 const authRouter = require('./routes/auth')
 const forums = require('./routes/forums')
@@ -22,6 +23,7 @@ const port = process.env.PORT || 5000
 
 app.use(express.static(path.resolve(__dirname, './dist')))
 app.use(express.json())
+app.use(fileUpload())
 app.use(helmet())
 app.use(cors())
 app.use('/api/v1/auth', authRouter)

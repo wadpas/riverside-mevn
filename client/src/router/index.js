@@ -95,10 +95,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-	if (to.meta.requestAuth && !localStorage.getItem('token')) {
+	if (to.meta.requestAuth && !localStorage.getItem('neos_token')) {
 		return { name: 'SingInView' }
 	}
-	if (to.meta.requiresGest && localStorage.getItem('token')) {
+	if (to.meta.requiresGest && localStorage.getItem('neos_token')) {
 		return { name: 'HomeView' }
 	}
 })

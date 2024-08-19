@@ -29,7 +29,7 @@ export const usePostsStore = defineStore('PostsStore', {
 		async createPost(post) {
 			post.userId = this.usersStore.authUser._id
 			post.threadId = post.threadId || this.threadsStore.thread._id
-			const token = localStorage.getItem('token')
+			const token = localStorage.getItem('neos_token')
 			if (!token) return
 			try {
 				const resPost = await axios.post('/posts', post)

@@ -1,11 +1,25 @@
 <template>
 	<div class="profile-card">
 		<form @submit.prevent="save">
-			<p class="text-center">
-				<img
-					:src="activeUser?.avatar"
-					:alt="`{activeUser.name} profile picture`"
-					class="avatar-xlarge img-update" />
+			<p class="text-center avatar-edit">
+				<label for="avatar">
+					<img
+						:src="activeUser?.avatar"
+						:alt="`{activeUser.name} profile picture`"
+						class="avatar-xlarge img-update" />
+					<div class="avatar-upload-overlay">
+						<fa
+							icon="camera"
+							size="3x"
+							:style="{ color: 'white', opacity: '8' }" />
+					</div>
+					<input
+						v-show="false"
+						type="file"
+						id="avatar"
+						accept="image/*"
+						@change="handleAvatarUpload" />
+				</label>
 			</p>
 
 			<div class="form-group">
@@ -110,6 +124,11 @@
 		posts: Array,
 		threads: Array,
 	})
+
+	async function handleAvatarUpload(e) {
+		const file = e.target.files[0]
+		props.activeUser.avatar = await usersStore.updateUserAvatar(file)
+	}
 
 	async function save() {
 		usersStore.updateUser()
