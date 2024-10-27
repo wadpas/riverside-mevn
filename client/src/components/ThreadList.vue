@@ -37,7 +37,7 @@
 	import { onBeforeMount } from 'vue'
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
-	import AppDate from './AppDate.vue'
+	import AppDate from './Footer.vue'
 
 	const props = defineProps({ threads: Array })
 	const usersStore = useUsersStore()

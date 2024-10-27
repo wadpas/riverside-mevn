@@ -1,20 +1,18 @@
 <template>
-	<TheNavbar />
-	<div class="container">
-		<div class="col-full push-top">
+	<div class="flex flex-col h-screen">
+		<Navbar />
+		<div class="flex-grow m-4">
 			<router-view />
 		</div>
+		<Footer />
 	</div>
 </template>
 
 <script setup>
 	import { onBeforeMount } from 'vue'
-	import TheNavbar from './components/TheNavbar.vue'
+	import Navbar from './components/Navbar.vue'
+	import Footer from './components/Footer.vue'
 	import { useUsersStore } from './stores/UsersStore'
 
 	const usersStore = useUsersStore()
-
-	onBeforeMount(async () => {
-		usersStore.fetchUser()
-	})
 </script>

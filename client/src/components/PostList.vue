@@ -55,7 +55,7 @@
 	import { storeToRefs } from 'pinia'
 	import { useUsersStore } from '../stores/UsersStore'
 	import { usePostsStore } from '../stores/PostsStore'
-	import AppDate from './AppDate.vue'
+	import AppDate from './Footer.vue'
 	import TextForm from './TextForm.vue'
 
 	const props = defineProps({ posts: Array })

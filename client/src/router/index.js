@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
-import ThreadView from '../views/ThreadView.vue'
-import ThreadCreditView from '../views/About.vue'
-import ForumView from '../views/ForumView.vue'
+import Blogs from '../views/Blogs.vue'
+import CreatePost from '../views/CreatePost.vue'
+import LoginRegister from '../views/LoginRegister.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import RegisterView from '../views/RegisterView.vue'
-import SingInView from '../views/SingInView.vue'
 import { useForumsStore } from '../stores/ForumsStore'
 import { useUsersStore } from '../stores/UsersStore'
 
@@ -23,56 +22,20 @@ const routes = [
 		component: About,
 	},
 	{
-		path: '/me',
-		name: 'ProfileView',
-		component: ProfileView,
-		meta: { toTop: true, smoothScroll: true, requestAuth: true },
+		path: '/blogs',
+		name: 'blogs',
+		component: Blogs,
 	},
 	{
-		path: '/me/edit',
-		name: 'ProfileEditView',
-		component: ProfileView,
-		props: { edit: true },
+		path: '/create-post',
+		name: 'create-post',
+		component: CreatePost,
 	},
+
 	{
-		path: '/forums/:id',
-		name: 'ForumView',
-		component: ForumView,
-		props: true,
-	},
-	{
-		path: '/threads/:id',
-		name: 'ThreadView',
-		component: ThreadView,
-		props: true,
-	},
-	{
-		path: '/forums/threads/sample',
-		name: 'ThreadCreditView',
-		component: ThreadCreditView,
-		meta: { requestAuth: true },
-		props: true,
-		beforeEnter(to, from, next) {
-			if (Object.keys(useForumsStore().forum).length === 0) {
-				next({
-					name: 'HomeView',
-				})
-			} else {
-				next()
-			}
-		},
-	},
-	{
-		path: '/register',
-		name: 'RegisterView',
-		component: RegisterView,
-		meta: { requiresGest: true },
-	},
-	{
-		path: '/signin',
-		name: 'SingInView',
-		component: SingInView,
-		meta: { requiresGest: true },
+		path: '/login-register',
+		name: 'login-register',
+		component: LoginRegister,
 	},
 	{
 		path: '/logout',
