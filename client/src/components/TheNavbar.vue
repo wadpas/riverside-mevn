@@ -1,110 +1,81 @@
 <template>
-	<header
-		class="header"
-		id="header"
-		v-click-outside="() => (userDropdownOpen = false)"
-		v-page-scroll="() => (mobileNavMenu = false)">
-		<div class="logo">
-			<router-link :to="{ name: 'HomeView' }">
-				<img src="../assets/neos_logo.svg" />
-			</router-link>
+	<nav class="bg-white">
+		<div class="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
+			<a
+				href="https://flowbite.com/"
+				class="flex items-center space-x-3 rtl:space-x-reverse">
+				<img
+					src="../assets/riverside.svg"
+					class="h-8"
+					alt="Riverside Logo" />
+			</a>
+			<button
+				data-collapse-toggle="navbar-default"
+				type="button"
+				class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+				aria-controls="navbar-default"
+				aria-expanded="false">
+				<span class="sr-only">Open main menu</span>
+				<svg
+					class="w-5 h-5"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 17 14">
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M1 1h15M1 7h15M1 13h15" />
+				</svg>
+			</button>
+			<div
+				class="hidden w-full md:block md:w-auto"
+				id="navbar-default">
+				<ul
+					class="flex flex-col p-4 mt-4 font-medium border border-gray-100 rounded-lg md:p-0 bg-gray-50 md:flex-row rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white">
+					<li>
+						<router-link
+							:to="{ name: 'home' }"
+							activeClass="bg-purple-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-purple-700">
+							Home
+						</router-link>
+					</li>
+					<li>
+						<router-link
+							:to="{ name: 'about' }"
+							activeClass="bg-purple-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-purple-700">
+							About
+						</router-link>
+					</li>
+					<li>
+						<a
+							href="#"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-purple-700">
+							Services
+						</a>
+					</li>
+					<li>
+						<a
+							href="#"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-purple-700">
+							Pricing
+						</a>
+					</li>
+					<li>
+						<a
+							href="#"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-purple-700">
+							Contact
+						</a>
+					</li>
+				</ul>
+			</div>
 		</div>
-		{{ userDropdownOpen }}
-		<div
-			class="btn-hamburger"
-			@click="mobileNavMenu = !mobileNavMenu">
-			<!-- use .btn-humburger-active to open the menu -->
-			<div class="top bar"></div>
-			<div class="middle bar"></div>
-			<div class="bottom bar"></div>
-		</div>
-		<!-- use .navbar-open to open nav -->
-		<nav
-			class="navbar"
-			:class="{ 'navbar-open': mobileNavMenu }">
-			<ul>
-				<li
-					v-if="authUser"
-					class="navbar-user">
-					<a
-						@click.prevent="userDropdownOpen = !userDropdownOpen"
-						v-click-outside="() => (userDropdownOpen = false)"
-						:to="{ name: 'ProfileView' }"
-						href="#">
-						<img
-							class="avatar-small"
-							:src="authUser?.avatar"
-							:alt="`${authUser?.name} profile picture`" />
-						<span>
-							{{ authUser?.username }}
-							<img
-								class="icon-profile"
-								src="../assets/arrow-profile.svg"
-								alt="" />
-						</span>
-					</a>
-
-					<!-- dropdown menu -->
-					<!-- add class "active-drop" to show the dropdown -->
-					<div
-						@click.prevent="userDropdownOpen = !userDropdownOpen"
-						id="user-dropdown"
-						:class="{ 'active-drop': userDropdownOpen }">
-						<div class="triangle-drop"></div>
-						<ul class="dropdown-menu">
-							<li class="dropdown-menu-item"><router-link :to="{ name: 'ProfileView' }">View profile</router-link></li>
-							<li class="dropdown-menu-item">
-								<a @click.prevent="signOut">Sign out</a>
-							</li>
-						</ul>
-					</div>
-				</li>
-				<div @click="mobileNavMenu = false">
-					<li
-						v-if="!authUser"
-						class="navbar-item">
-						<router-link :to="{ name: 'SingInView' }">Sign In</router-link>
-					</li>
-					<li
-						v-if="!authUser"
-						class="navbar-item">
-						<router-link :to="{ name: 'RegisterView' }">Register</router-link>
-					</li>
-					<li
-						v-if="authUser"
-						class="navbar-mobile-item">
-						<router-link :to="{ name: 'ProfileView' }">View Profile</router-link>
-					</li>
-					<li
-						v-if="authUser"
-						class="navbar-mobile-item">
-						<a @click.prevent="signOut">Sign Out</a>
-					</li>
-				</div>
-			</ul>
-
-			<!-- <ul>
-				<li class="navbar-item">
-					<a href="index.html">Home</a>
-				</li>
-				<li class="navbar-item">
-					<a href="category.html">Category</a>
-				</li>
-				<li class="navbar-item">
-					<a href="forum.html">Forum</a>
-				</li>
-				<li class="navbar-item">
-					<a href="thread.html">Thread</a>
-				</li>
-				<li class="navbar-item mobile-only">
-					<a href="profile.html">My Profile</a>
-				</li>
-				<li class="navbar-item mobile-only">
-					<a href="#">Logout</a>
-				</li>
-			</ul> -->
-		</nav>
-	</header>
+	</nav>
 </template>
 
 <script setup>

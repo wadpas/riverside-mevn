@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Home from '../views/Home.vue'
+import About from '../views/About.vue'
 import ThreadView from '../views/ThreadView.vue'
-import ThreadCreditView from '../views/ThreadCreditView.vue'
+import ThreadCreditView from '../views/About.vue'
 import ForumView from '../views/ForumView.vue'
 import NotFound from '../views/NotFoundView.vue'
 import ProfileView from '../views/ProfileView.vue'
@@ -13,8 +14,13 @@ import { useUsersStore } from '../stores/UsersStore'
 const routes = [
 	{
 		path: '/',
-		name: 'HomeView',
-		component: HomeView,
+		name: 'home',
+		component: Home,
+	},
+	{
+		path: '/about',
+		name: 'about',
+		component: About,
 	},
 	{
 		path: '/me',
