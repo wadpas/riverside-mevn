@@ -34,7 +34,7 @@
 	import { useThreadsStore } from '../stores/ThreadsStore'
 	import { usePostsStore } from '../stores/PostsStore'
 	import { useUsersStore } from '../stores/UsersStore'
-	import PostList from '../components/PostList.vue'
+	import PostList from '../components/ReviewGrid.vue'
 	import ProfileCard from '../components/ProfileCard.vue'
 	import ProfileCardEditor from '../components/ProfileCardEditor.vue'
 

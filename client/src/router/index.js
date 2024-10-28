@@ -1,14 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
-import Blogs from '../views/Blogs.vue'
-import CreatePost from '../views/CreatePost.vue'
-import LoginRegister from '../views/LoginRegister.vue'
+import Blog from '../views/Blog.vue'
+import Login from '../views/Login.vue'
 import NotFound from '../views/NotFoundView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import { useForumsStore } from '../stores/ForumsStore'
-import { useUsersStore } from '../stores/UsersStore'
+import ReviewGrid from '../components/ReviewGrid.vue'
+import ReviewCreate from '../components/ReviewCreate.vue'
+import ReviewDetails from '../components/ReviewDetails.vue'
 
 const routes = [
 	{
@@ -22,28 +20,32 @@ const routes = [
 		component: About,
 	},
 	{
-		path: '/blogs',
-		name: 'blogs',
-		component: Blogs,
+		path: '/blog',
+		name: 'blog',
+		component: Blog,
+		children: [
+			{
+				path: 'all',
+				name: 'all',
+				component: ReviewGrid,
+			},
+			{
+				path: 'new',
+				name: 'new',
+				component: ReviewCreate,
+			},
+			{
+				path: ':id',
+				name: 'details',
+				component: ReviewDetails,
+				props: true,
+			},
+		],
 	},
 	{
-		path: '/create-post',
-		name: 'create-post',
-		component: CreatePost,
-	},
-
-	{
-		path: '/login-register',
-		name: 'login-register',
-		component: LoginRegister,
-	},
-	{
-		path: '/logout',
-		name: 'SignOut',
-		async beforeEnter(to, from) {
-			await useUsersStore().signOut()
-			return { name: 'HomeView' }
-		},
+		path: '/login',
+		name: 'login',
+		component: Login,
 	},
 	{
 		path: '/:pathMatch(.*)*',

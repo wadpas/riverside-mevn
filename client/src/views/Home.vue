@@ -7,6 +7,6 @@
 </template>
 
 <script setup>
-	import BlogPost from '../components/BlogPost.vue'
+	import Post from '../components/ReviewDetails.vue'
 	const post = []
 </script>

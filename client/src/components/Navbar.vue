@@ -36,41 +36,41 @@
 					<li>
 						<router-link
 							:to="{ name: 'home' }"
-							activeClass="bg-lime-600 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-lime-700 md:hover:bg-transparent md:border-0 md:hover:text-lime-700">
+							activeClass="bg-orange-400 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
 							Home
 						</router-link>
 					</li>
 					<li>
 						<router-link
-							:to="{ name: 'blogs' }"
-							activeClass="bg-lime-600 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-lime-700 md:hover:bg-transparent md:border-0 md:hover:text-lime-700">
-							Blogs
+							:to="{ name: 'all' }"
+							activeClass="bg-orange-400 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							Blog
 						</router-link>
 					</li>
 					<li>
 						<router-link
-							:to="{ name: 'create-post' }"
-							activeClass="bg-lime-600 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-lime-700 md:hover:bg-transparent md:border-0 md:hover:text-lime-700">
-							Create Post
+							:to="{ name: 'new' }"
+							activeClass="bg-orange-400 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							Create
 						</router-link>
 					</li>
 					<li>
 						<router-link
 							:to="{ name: 'about' }"
-							activeClass="bg-lime-600 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-lime-700 md:hover:bg-transparent md:border-0 md:hover:text-lime-700">
+							activeClass="bg-orange-400 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
 							About
 						</router-link>
 					</li>
 					<li>
 						<router-link
-							:to="{ name: 'login-register' }"
-							activeClass="bg-lime-600 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-lime-700 md:hover:bg-transparent md:border-0 md:hover:text-lime-700">
-							Login/Register
+							:to="{ name: 'login' }"
+							activeClass="bg-orange-400 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							Login
 						</router-link>
 					</li>
 				</ul>
