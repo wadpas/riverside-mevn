@@ -1,10 +1,14 @@
 const Forum = require('../models/forum')
+const Movie = require('../models/movie')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
-const getForums = async (req, res) => {
-	const forums = await Forum.find({}).sort('createdAt')
-	res.status(StatusCodes.OK).json({ forums, count: forums.length })
+const year = 2015
+const limit = 24
+
+const getMovies = async (req, res) => {
+	const movies = await Movie.find({ year: year }).limit(limit)
+	res.status(StatusCodes.OK).json({ movies, count: movies.length })
 }
 
 const getForum = async (req, res) => {
@@ -54,7 +58,7 @@ const deleteForum = async (req, res) => {
 }
 
 module.exports = {
-	getForums,
+	getMovies,
 	createForum,
 	getForum,
 	updateForum,
