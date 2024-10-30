@@ -1,5 +1,5 @@
 <template>
-	<nav class="bg-white shadow">
+	<nav class="bg-white shadow-sm">
 		<div class="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
 			<router-link :to="{ name: 'home' }">
 				<img
@@ -36,40 +36,40 @@
 					<li>
 						<router-link
 							:to="{ name: 'home' }"
-							activeClass="bg-orange-400 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							activeClass="bg-red-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-600 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
 							Home
 						</router-link>
 					</li>
 					<li>
 						<router-link
 							:to="{ name: 'all' }"
-							activeClass="bg-orange-400 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
-							Blog
+							activeClass="bg-red-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-500 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
+							Reviews
 						</router-link>
 					</li>
 					<li>
 						<router-link
 							:to="{ name: 'new' }"
-							activeClass="bg-orange-400 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							activeClass="bg-red-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-500 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
 							Create
 						</router-link>
 					</li>
 					<li>
 						<router-link
 							:to="{ name: 'about' }"
-							activeClass="bg-orange-400 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							activeClass="bg-red-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-500 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
 							About
 						</router-link>
 					</li>
 					<li>
 						<router-link
 							:to="{ name: 'login' }"
-							activeClass="bg-orange-400 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-orange-500 md:hover:bg-transparent md:border-0 md:hover:text-orange-500">
+							activeClass="bg-red-600 rounded text-white"
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-500 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
 							Login
 						</router-link>
 					</li>
@@ -80,3 +80,4 @@
 </template>
 
 <script setup></script>
+s
