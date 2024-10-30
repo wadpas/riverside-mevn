@@ -37,7 +37,7 @@
 						<router-link
 							:to="{ name: 'home' }"
 							activeClass="bg-red-600 rounded text-white"
-							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-600 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
+							class="block px-3 py-1 text-gray-900 rounded hover:bg-red-500 md:hover:bg-transparent md:border-0 md:hover:text-red-500">
 							Home
 						</router-link>
 					</li>
